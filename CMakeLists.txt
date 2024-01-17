@@ -8,6 +8,17 @@ include_directories(inc)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-add_executable(demo ${SOURCES})
+add_executable(demo ${SOURCES}
+#        src/YU_CAN.cpp
+#        src/YU_MOTOR.cpp
+#        src/YU_DEBUG.cpp
+#        inc/YU_CAN.h
+#        inc/YU_DEBUG.h
+#        inc/YU_MOTOR.h
+#        src/YU_CAN.cpp
+#        inc/YU_CAN.h
+#        src/YU_CAN.cpp
+        src/Test.cpp
+        inc/Test.h)
 
 target_link_libraries(demo pthread)
