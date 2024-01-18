@@ -19,6 +19,10 @@ add_executable(demo ${SOURCES}
 #        inc/YU_CAN.h
 #        src/YU_CAN.cpp
         src/Test.cpp
-        inc/Test.h)
+        inc/Test.h
+        src/YU_MATH.cpp
+        inc/YU_MATH.h
+        inc/YU_DEFINE.h
+        inc/YU_DEFINE.h)
 
 target_link_libraries(demo pthread)
