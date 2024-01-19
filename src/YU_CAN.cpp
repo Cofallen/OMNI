@@ -183,7 +183,7 @@ bool YU_F_CAN_RECV(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DATA,uint8_t
 
 // CAN 发送
 
-static bool YU_F_CAN_SEND(uint8_t can,u_int32_t can_id,int16_t num1,int16_t num2,,int16_t num3,int16_t num4)
+static bool YU_F_CAN_SEND(uint8_t can,u_int32_t can_id,int16_t num1,int16_t num2,int16_t num3,int16_t num4)
 {
     struct can_frame CAN_FRAME{ };
 
