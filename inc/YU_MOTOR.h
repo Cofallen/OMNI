@@ -8,7 +8,7 @@
 #include <cstdint>
 
 //按照RUI的代码写的电机数据结构体打印板
-struct YU_MOTOR_DATA_TYPEDEF
+struct YU_TYPEDEF_MOTOR_DATA
 {
     int8_t ONLINE_JUDGE_TIME; //
     int16_t ANGLE_LAST;
@@ -28,7 +28,7 @@ struct YU_MOTOR_DATA_TYPEDEF
 };
 
 // PID参数模板
-struct YU_MOTOR_PID_TYPEDEF
+struct YU_TYPEDEF_MOTOR_PID
 {
     struct
     {
@@ -51,10 +51,10 @@ struct YU_MOTOR_PID_TYPEDEF
 typedef struct
 {
     uint8_t PID_INIT;
-    struct YU_MOTOR_DATA_TYPEDEF DATA; // 电机数据
-    struct YU_MOTOR_PID_TYPEDEF PID_A; // 角度环
-    struct YU_MOTOR_PID_TYPEDEF PID_S; // 速度环
-    struct YU_MOTOR_PID_TYPEDEF PID_C; // 电流环
+    struct YU_TYPEDEF_MOTOR_DATA DATA; // 电机数据
+    struct YU_TYPEDEF_MOTOR_PID PID_A; // 角度环
+    struct YU_TYPEDEF_MOTOR_PID PID_S; // 速度环
+    struct YU_TYPEDEF_MOTOR_PID PID_C; // 电流环
 } YU_TYPEDEF_MOTOR;
 
 #endif //DEMO_YU_MOTOR_H
