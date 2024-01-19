@@ -10,31 +10,7 @@
 char RxMsg[1024] = {0};
 char TxMsg[5] = {0, 1, 2, 3, 4};
 
-// RUI的结构体
-
-// struct RUI_TYPEDEF_DEBUG
-// {
-//   struct PID PID_A;
-//   struct PID PID_S;
-// };
-// struct RUI_TYPEDEF_DEBUG RUI_V_DEBUG[10];
-
-// // UDP发送共用体
-// union RUI_TYPEDEF_SEND_UNION
-// {
-//     struct
-//     {
-//         struct RUI_TYPEDEF_DEBUG RUI_V_DEBUG;
-//         unsigned char TAIL[4];
-//     } PACKET;
-//     char RAW[160];
-// };
-// RUI_TYPEDEF_SEND_UNION RUI_U_SEND{};
-// // 包尾
-// RUI_U_SEND.PACKET.TAIL[2] = 0x80;
-// RUI_U_SEND.PACKET.TAIL[3] = 0x7f;
-// printf("调试线程启动");
-
+// justfloat 结构体
 union DATA_TYPEDEF_DEMO
 {
     struct

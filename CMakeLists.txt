@@ -23,6 +23,8 @@ add_executable(demo ${SOURCES}
         src/YU_MATH.cpp
         inc/YU_MATH.h
         inc/YU_DEFINE.h
-        inc/YU_DEFINE.h)
+        inc/YU_DEFINE.h
+        src/YU_TOP.cpp
+        inc/YU_TOP.h)
 
 target_link_libraries(demo pthread)

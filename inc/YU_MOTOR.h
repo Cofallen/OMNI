@@ -57,4 +57,9 @@ typedef struct
     struct YU_TYPEDEF_MOTOR_PID PID_C; // 电流环
 } YU_TYPEDEF_MOTOR;
 
+
+void YU_F_MOTOR_CAN_CAL(YU_TYPEDEF_MOTOR *MOTOR,const uint8_t *CAN_DATA,uint8_t TYPE,uint8_t STATUS_ID);
+void YU_F_MOTOR_CLEAR(YU_TYPEDEF_MOTOR *MOTOR, uint8_t *TYPE);
+
+
 #endif //DEMO_YU_MOTOR_H

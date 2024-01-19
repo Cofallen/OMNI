@@ -7,8 +7,38 @@
  */
 
 
+
 #ifndef DEMO_YU_DEFINE_H
 #define DEMO_YU_DEFINE_H
+
+
+/*****************************离线检测**********************************/
+//需要离线检测的设备数量
+#define YU_D_STATUS_NUM               11
+//离线检测设备的ID序号
+#define YU_D_STATUS_ID_CHASSIS_MOTOR_1 0
+#define YU_D_STATUS_ID_CHASSIS_MOTOR_2 1
+#define YU_D_STATUS_ID_CHASSIS_MOTOR_3 2
+#define YU_D_STATUS_ID_CHASSIS_MOTOR_4 3
+#define YU_D_STATUS_ID_GIMBAL_PIT     4
+#define YU_D_STATUS_ID_GIMBAL_YAW     5
+#define YU_D_STATUS_ID_ATTACK_L       6
+#define YU_D_STATUS_ID_ATTACK_R       7
+#define YU_D_STATUS_ID_ATTACK_G       8
+#define YU_D_STATUS_ID_TOP            9
+#define YU_D_STATUS_ID_DBUS           10
+//设备状态
+#define YU_D_STATUS_ON                1
+#define YU_D_STATUS_OFF               2
+#define YU_D_STATUS_OFF_ON            3
+#define YU_D_STATUS_ON_OFF            4
+//电机离线检测时间
+#define YU_D_STATUS_JUDGE_TIME_MOTOR  200
+//陀螺仪离线检测时间
+#define YU_D_STATUS_JUDGE_TIME_TOP 15
+/*****************************离线检测**********************************/
+
+
 
 /******************************CAN_ID********************************/
 #define YU_D_CAN_1 0
