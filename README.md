@@ -35,7 +35,7 @@ Please check if CAN1 EXISTS
 
 ## TODO
 
--[ ] RUI留的作业
+- [ ] RUI留的作业
     - [ ] socket CAN 通信整理
     - [ ] 多线程的高级运用
     - [ ] CMake,gitignore的的高级运用
