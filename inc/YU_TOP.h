@@ -9,7 +9,7 @@
 #include <cstdint>
 #include <cstring>
 
-typedef struct RUI_TYPEDEF_TOP
+typedef struct YU_TYPEDEF_TOP
 {
     float REALITY_ANGLE;            //真实角度//带圈数
     int16_t YAW_ANGLE[2];
