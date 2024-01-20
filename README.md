@@ -41,4 +41,4 @@ Please check if CAN1 EXISTS
     - [ ] CMake,gitignore的的高级运用
     - [ ] RUI的代码吃透
 
--[ ] 我的小计划
+- [ ] 我的小计划
