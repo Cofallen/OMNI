@@ -42,6 +42,7 @@ Please check if CAN1 EXISTS
     - [ ] CMake,gitignore的的高级运用
     - [ ] RUI的代码吃透
 
+
 - [ ] 我的小计划
   - [ ] 目前没想好
   - [ ] 弄清终端只有THREAD_3运行的原因。完成测试线程的运行。
