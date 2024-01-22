@@ -32,14 +32,14 @@ void say_hello(void )
 int main()
 {
     // 初始化
-    YU_F_CAN_INIT();
+//    YU_F_CAN_INIT();
 
     while (1)
     {
         // 测试线程
         thread THREAD_1(say_hello);
 
-        // VOFA 测试线程
+//         VOFA 测试线程
         thread THREAD_2(YU_F_SOCKET_UDP_VOFA);
 
         // CAN1 线程 不知道要不要写 while(1)
@@ -78,7 +78,6 @@ int main()
         THREAD_2.join();
         THREAD_3.join();
         THREAD_4.join();
-
     }
 
 }

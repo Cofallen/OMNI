@@ -3,13 +3,13 @@
 ## 日志
 
 * 2024-01-20 今天基本完成RUI留的作业，距离回家还有两个小时，抓紧准备一下
-* 2024-01-24 现在主要还是线程安排，socket CAN 的应用。不知道为什么测试线程没run。
+* 2024-01-21 现在主要还是线程安排，socket CAN 的应用。不知道为什么测试线程没run。
 * 
 
 
 ## 问题
 
-* 线程3跑的最快，出现下面运行结果；
+-[x] 线程3跑的最快，出现下面运行结果；
 
 ```bash
 /tmp/tmp.3rxswWp9QV/build/debug/demo
@@ -19,9 +19,34 @@ Please check if CAN1 EXISTS
 : No such device
 ```
 
-* `main.cpp`中线程3注释掉的部分编译不过
-* UDP 解算一点也没看懂，就没写
-* 只有这一个线程跑了，目前没有看到其他线程运行
+*原因：* 这是`CAN INIT`的运行结果，因为没插`CAN`口，在
+
+```c++
+if(ioctl(YU_C_FD[0],SIOCGIFINDEX,&YU_C_IFR[0]) < 0)
+    {
+        perror("Please check if CAN1 EXISTS \n");
+        close(YU_C_FD[0]);
+        exit(-1);
+    }
+```
+
+直接退出代码。
+
+*解决方案：* 先注释掉这个。
+
+*经测试，编译后成功进入1，2，4线程。2线程没有关闭套接字故将一直循环。*
+
+-[ ] 遇到了奇怪的问题，学校里写的UDP发VOFA好像不能用了。
+
+先是`sendto error`，后面直接`bind error`。改了`ip`还是没用。
+
+```c++
+SERVER_ADDR.sin_addr.s_addr = inet_addr("119.178.43.143");
+```
+
+-[ ] `main.cpp`中线程3注释掉的部分编译不过
+-[ ] UDP 解算一点也没看懂，就没写
+-[ ] 只有这一个线程跑了，目前没有看到其他线程运行
 
 
 ## 基本整理
@@ -37,13 +62,12 @@ Please check if CAN1 EXISTS
 ## TODO
 
 - [ ] RUI留的作业
-    - [ ] socket CAN 通信整理
-    - [ ] 多线程的高级运用
-    - [ ] CMake,gitignore的的高级运用
-    - [ ] RUI的代码吃透
-
-
+  - [ ] socket CAN 通信整理
+  - [ ] 多线程的高级运用
+  - [ ] CMake,gitignore的的高级运用
+  - [ ] RUI的代码吃透
 - [ ] 我的小计划
   - [ ] 目前没想好
   - [ ] 弄清终端只有THREAD_3运行的原因。完成测试线程的运行。
   - [ ] 弄清THREAD_3的终端反馈。
+  - [ ] 将线程包装成函数

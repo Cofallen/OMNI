@@ -44,6 +44,7 @@ void YU_F_SOCKET_UDP_VOFA(void)
     SERVER_ADDR.sin_family = AF_INET;
     SERVER_ADDR.sin_port = htons(12345);
     SERVER_ADDR.sin_addr.s_addr = htonl(INADDR_ANY);
+//    SERVER_ADDR.sin_addr.s_addr = inet_addr("119.178.43.143");
 
     // FD创建
     if (-1 == (SERVER_FD = socket(AF_INET, SOCK_DGRAM, 0)))
@@ -89,11 +90,11 @@ void YU_F_SOCKET_UDP_VOFA(void)
 //            exit(1);
 //        }
 
-        for (int i = 0; i < 10; ++i) {
-            printf("请输入第%d个数：\n",i);
-            scanf("%f",&DATA_TEMP[i]);
-            DATA_SEND.PACKAGE.PID[i] = DATA_TEMP[i];
-        }
+//        for (int i = 0; i < 10; ++i) {
+//            printf("请输入第%d个数：\n",i);
+//            scanf("%f",&DATA_TEMP[i]);
+//            DATA_SEND.PACKAGE.PID[i] = DATA_TEMP[i];
+//        }
 
         if (sendto(SERVER_FD,&DATA_SEND,sizeof (DATA_SEND),0,(sockaddr *)&CLIENT_ADDR,CLIENT_ADDR_LEN)<0)
         {
