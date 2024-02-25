@@ -3,7 +3,8 @@
   <component name="CMakeSharedSettings">
     <configurations>
       <configuration PROFILE_NAME="Release" ENABLED="true" GENERATION_DIR="build/release" CONFIG_NAME="Release" />
-      <configuration PROFILE_NAME="Debug" ENABLED="true" GENERATION_DIR="build/debug" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Debug" ENABLED="false" GENERATION_DIR="build/debug" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Debug-nx" ENABLED="true" GENERATION_DIR="build/debug-nx" CONFIG_NAME="Debug" TOOLCHAIN_NAME="nx" />
     </configurations>
   </component>
 </project>

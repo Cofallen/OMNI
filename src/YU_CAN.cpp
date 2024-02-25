@@ -29,7 +29,7 @@ bool YU_F_CAN_INIT(void)
     // 变量
     struct sockaddr_can YU_C_ADDR[2];
     struct ifreq YU_C_IFR[2];
-    char *YU_C_IFNAMES[2] = {(char *)"CAN0",(char *)"CAN1"}; // 两个CAN接口名
+    char *YU_C_IFNAMES[2] = {(char *)"can0",(char *)"can0"}; // 两个CAN接口名
 
     // 创建socket and bind can
 
@@ -40,7 +40,7 @@ bool YU_F_CAN_INIT(void)
     } else
     {
         perror("CAN FD build failure\n");
-        exit(1);
+//        exit(1);
     }
 
     // 这里RUI直接访问.ifrn_name，我感觉不太好，有空再看看
@@ -52,7 +52,7 @@ bool YU_F_CAN_INIT(void)
     {
         perror("Please check if CAN1 EXISTS \n");
         close(YU_C_FD[0]);
-        exit(-1);
+//        exit(-1);
     }
 
     YU_C_ADDR[0].can_family = AF_CAN;
@@ -66,7 +66,7 @@ bool YU_F_CAN_INIT(void)
     {
         perror("CAN1 bind error\n");
         close(YU_C_FD[0]);
-        exit(-1);
+//        exit(-1);
     }
 
     // CAN2
@@ -76,7 +76,7 @@ bool YU_F_CAN_INIT(void)
     } else
     {
         perror("CAN FD build failure\n");
-        exit(-1);
+//        exit(-1);
     }
 
     strcpy(YU_C_IFR[1].ifr_ifrn.ifrn_name,YU_C_IFNAMES[1]);
@@ -85,7 +85,7 @@ bool YU_F_CAN_INIT(void)
     {
         perror("Please check if CAN2 EXISTS \n");
         close(YU_C_FD[1]);
-        exit(-1);
+//        exit(-1);
     }
 
     YU_C_ADDR[1].can_family = AF_CAN;
@@ -98,7 +98,7 @@ bool YU_F_CAN_INIT(void)
     {
         perror("CAN2 bind error\n");
         close(YU_C_FD[1]);
-        exit(-1);
+//        exit(-1);
     }
 
     return 1;
@@ -121,6 +121,7 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
 {
     if (can == YU_D_CAN_1)
     {
+//        printf("CANID%x\n",CAN_ID);
         // 这几个解算也看不懂
         switch (CAN_ID)
         {
@@ -132,8 +133,8 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
                 break;
             case YU_D_CAN_ID_ATTACK_R:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_ATTACK_R], CAN_DATA, YU_D_MOTOR_TYPE_3508, YU_D_STATUS_ID_ATTACK_R);
                 break;
-            case YU_D_CAN_ID_ATTACK_G:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_ATTACK_G], CAN_DATA, YU_D_MOTOR_TYPE_2006, YU_D_STATUS_ID_ATTACK_G);
-                break;
+//            case YU_D_CAN_ID_ATTACK_G:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_ATTACK_G], CAN_DATA, YU_D_MOTOR_TYPE_2006, YU_D_STATUS_ID_ATTACK_G);
+//                break;
 //            case YU_D_CAN_ID_TOP:YU_F_TOP_CAN_CAL(YU_C_TOP_DATA, CAN_DATA);
 //                break;
             default:break;
@@ -183,7 +184,7 @@ bool YU_F_CAN_RECV(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DATA,uint8_t
 
 // CAN 发送
 
-static bool YU_F_CAN_SEND(uint8_t can,u_int32_t can_id,int16_t num1,int16_t num2,int16_t num3,int16_t num4)
+ bool YU_F_CAN_SEND(uint8_t can,uint32_t can_id,int16_t num1,int16_t num2,int16_t num3,int16_t num4)
 {
     struct can_frame CAN_FRAME{ };
 
@@ -200,31 +201,9 @@ static bool YU_F_CAN_SEND(uint8_t can,u_int32_t can_id,int16_t num1,int16_t num2
     CAN_FRAME.data[6] = ((num4) >> 8);
     CAN_FRAME.data[7] = (num4);
 
-    // 看不懂了  select函数，有时间再说
-//// 使用select函数检查是否有数据可读
-//fd_set RUI_WRITE_FDS;
-//FD_ZERO(&RUI_WRITE_FDS);
-//FD_SET(RUI_V_FD_CAN[can], &RUI_WRITE_FDS);
-//struct timeval RUI_CAN_TIMEOUT{ };
-//RUI_CAN_TIMEOUT.tv_sec = 1;
-//RUI_CAN_TIMEOUT.tv_usec = 0;
-//
-//// 等待CAN_FD[can]可写
-//int RET = select(RUI_V_FD_CAN[can] + 1, nullptr, &RUI_WRITE_FDS, nullptr, &RUI_CAN_TIMEOUT);
-//
-//if (RET > 0)
-//{
-//// CAN_FD[can]可写，执行写操作
-//if (write(RUI_V_FD_CAN[can], &CAN_FRAME, sizeof(struct can_frame)) > 0)
-//{
-//return RUI_D_READY;
-//}
-//} else
-//{
-//// 发生错误
-//RUI_D_LOG_ERROR("错误-CAN");
-//return RUI_D_ERROR;
-//}
+
+    write(YU_C_FD[can], &CAN_FRAME, sizeof(struct can_frame)) ;
+
 
     return 1;
 }

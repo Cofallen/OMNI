@@ -18,6 +18,8 @@ using namespace std;
 
 // 变量
 YU_TYPEDEF_MOTOR GM6020;
+YU_TYPEDEF_MOTOR MOTOR[10];
+
 YU_TYPEDEF_TOP GM6020_TOP;
 uint8_t YU_C_DATA[8]{ };
 uint32_t YU_C_TYPE;
@@ -36,49 +38,10 @@ int main()
 
     while (1)
     {
-        // 测试线程
-        thread THREAD_1(say_hello);
-
-        // VOFA 测试线程
-        thread THREAD_2(YU_F_SOCKET_UDP_VOFA);
-
-        // CAN1 线程 不知道要不要写 while(1)
-        std::thread THREAD_3([](){
-            if(YU_F_CAN_RECV(&GM6020,&GM6020_TOP,YU_D_CAN_1) != 1)
-            {
-                perror("CAN RECV error\n");
-                exit(-1);
-            }
-            usleep(1);
-
-            // 注释掉的编译不了，回家再说
-//            if (YU_F_CAN_RESOLVE(&GM6020,&GM6020_TOP,YU_D_CAN_1,YU_D_CAN_ID_PIT,YU_C_DATA) != 1)
-//            {
-//                perror("CAN RESOLVE error\n");
-//                exit(-1);
-//            }
-//            // 没有写遥控，先随便发点东西
-//            if (YU_F_CAN_SEND(YU_D_CAN_1,YU_D_CAN_ID_PIT,5000,0,0,0) != 1)
-//            {
-//                perror("CAN SEND error\n");
-//                exit(-1);
-//            }
-        });
-
-        // VOFA 发送电机数据线程
-        std::thread THREAD_4([](){
-            printf("VOFA 发送电机数据线程\n");
-            usleep(1);
-//            YU_F_SOCKET_UDP_VOFA();
-        });
-
-        printf("c\n");
-
-        THREAD_1.join();
-        THREAD_2.join();
-        THREAD_3.join();
-        THREAD_4.join();
-
+         YU_F_CAN_RECV(MOTOR,&GM6020_TOP ,0);
+         printf("ANGLE:%d\n",MOTOR[4].DATA.ANGLE_NOW);
+         YU_F_CAN_SEND(0,0x1FF,1000,1000,1000,100);
+usleep(1);
     }
 
 }
