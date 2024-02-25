@@ -27,9 +27,9 @@ void YU_F_SOCKET_UDP_VOFA(void)
 {
     //发送数据初始化
     DATA_TYPEDEF_DEMO DATA_SEND{};
-    for (int i = 0; i < 10; ++i) {
-        DATA_SEND.PACKAGE.PID[i] = (float)i;
-    }
+//    for (int i = 0; i < 10; ++i) {
+//        DATA_SEND.PACKAGE.PID[i] = (float)(i);
+//    }
 //    DATA_SEND.PACKAGE.PID[];
     DATA_SEND.PACKAGE.TAIL[2] = 0x80;
     DATA_SEND.PACKAGE.TAIL[3] = 0x7f;
@@ -37,13 +37,14 @@ void YU_F_SOCKET_UDP_VOFA(void)
 
     int SERVER_FD = 0;
     struct sockaddr_in SERVER_ADDR = {}, CLIENT_ADDR = {};
-    socklen_t CLIENT_ADDR_LEN;
+    socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
 
     // 初始化
     memset(&SERVER_ADDR, 0, sizeof(SERVER_ADDR));
     SERVER_ADDR.sin_family = AF_INET;
     SERVER_ADDR.sin_port = htons(12345);
     SERVER_ADDR.sin_addr.s_addr = htonl(INADDR_ANY);
+//    SERVER_ADDR.sin_addr.s_addr = inet_addr("119.178.43.143");
 
     // FD创建
     if (-1 == (SERVER_FD = socket(AF_INET, SOCK_DGRAM, 0)))
@@ -76,7 +77,7 @@ void YU_F_SOCKET_UDP_VOFA(void)
 
 //         fgets((char *)TxMsg, sizeof(TxMsg), stdin);
 
-        /* 发送数据到客户端 */
+//        /* 发送数据到客户端 */
 //        if (sendto(SERVER_FD, TxMsg, 5, 0, (struct sockaddr *)&CLIENT_ADDR, CLIENT_ADDR_LEN) < 0)
 //        {
 //            perror("sendto failed");
