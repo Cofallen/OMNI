@@ -4,7 +4,7 @@
 
 * 2024-01-20 今天基本完成RUI留的作业，距离回家还有两个小时，抓紧准备一下
 * 2024-01-21 现在主要还是线程安排，socket CAN 的应用。不知道为什么测试线程没run。
-* 
+* 2024-02-25 解决了VOFA不能用的问题
 
 
 ## 问题
@@ -36,7 +36,7 @@ if(ioctl(YU_C_FD[0],SIOCGIFINDEX,&YU_C_IFR[0]) < 0)
 
 *经测试，编译后成功进入1，2，4线程。2线程没有关闭套接字故将一直循环。*
 
-- [ ] 遇到了奇怪的问题，学校里写的UDP发VOFA好像不能用了。
+- [x] 遇到了奇怪的问题，学校里写的UDP发VOFA好像不能用了。
 
 先是`sendto error`，后面直接`bind error`。改了`ip`还是没用。
 
@@ -44,9 +44,23 @@ if(ioctl(YU_C_FD[0],SIOCGIFINDEX,&YU_C_IFR[0]) < 0)
 SERVER_ADDR.sin_addr.s_addr = inet_addr("119.178.43.143");
 ```
 
+*原因：* `Vscode`编译器强大，原来写的代码部分有误，但是被编译成功了，就没注意到。
+
+```c
+int SERVER_FD = 0;
+struct sockaddr_in SERVER_ADDR = {}, CLIENT_ADDR = {};
+socklen_t CLIENT_ADDR_LEN;
+```
+应改成
+```c
+int SERVER_FD = 0;
+struct sockaddr_in SERVER_ADDR = {}, CLIENT_ADDR = {};
+socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
+```
+
 - [ ] `main.cpp`中线程3注释掉的部分编译不过
 - [ ] UDP 解算一点也没看懂，就没写
-- [ ] 只有这一个线程跑了，目前没有看到其他线程运行
+- [x] 只有这一个线程跑了，目前没有看到其他线程运行
 
 
 ## 基本整理
@@ -71,3 +85,7 @@ SERVER_ADDR.sin_addr.s_addr = inet_addr("119.178.43.143");
   - [x] 弄清终端只有THREAD_3运行的原因。完成测试线程的运行。
   - [x] 弄清THREAD_3的终端反馈。
   - [ ] 将线程包装成函数
+- [ ] 配置文件
+  - [ ] 熟悉ini配置文件用法
+  - [ ] 读取修改代码
+  - [ ] 配合UDP+上位机修改配置文件

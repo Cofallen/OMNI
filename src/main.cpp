@@ -37,19 +37,19 @@ int main()
     while (1)
     {
         // 测试线程
-        thread THREAD_1(say_hello);
+//        thread THREAD_1(say_hello);
 
 //         VOFA 测试线程
         thread THREAD_2(YU_F_SOCKET_UDP_VOFA);
 
         // CAN1 线程 不知道要不要写 while(1)
-        std::thread THREAD_3([](){
-            if(YU_F_CAN_RECV(&GM6020,&GM6020_TOP,YU_D_CAN_1) != 1)
-            {
-                perror("CAN RECV error\n");
-                exit(-1);
-            }
-            usleep(1);
+//        std::thread THREAD_3([](){
+//            if(YU_F_CAN_RECV(&GM6020,&GM6020_TOP,YU_D_CAN_1) != 1)
+//            {
+//                perror("CAN RECV error\n");
+//                exit(-1);
+//            }
+//            usleep(1);
 
             // 注释掉的编译不了，回家再说
 //            if (YU_F_CAN_RESOLVE(&GM6020,&GM6020_TOP,YU_D_CAN_1,YU_D_CAN_ID_PIT,YU_C_DATA) != 1)
@@ -63,21 +63,21 @@ int main()
 //                perror("CAN SEND error\n");
 //                exit(-1);
 //            }
-        });
+//        });
 
         // VOFA 发送电机数据线程
-        std::thread THREAD_4([](){
-            printf("VOFA 发送电机数据线程\n");
-            usleep(1);
+//        std::thread THREAD_4([](){
+//            printf("VOFA 发送电机数据线程\n");
+//            usleep(1);
 //            YU_F_SOCKET_UDP_VOFA();
-        });
+//        });
 
-        printf("c\n");
-
-        THREAD_1.join();
+//        printf("c\n");
+//
+//        THREAD_1.join();
         THREAD_2.join();
-        THREAD_3.join();
-        THREAD_4.join();
+//        THREAD_3.join();
+//        THREAD_4.join();
     }
 
 }
