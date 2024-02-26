@@ -41,7 +41,7 @@ int main()
          YU_F_CAN_RECV(MOTOR,&GM6020_TOP ,0);
          printf("ANGLE:%d\n",MOTOR[4].DATA.ANGLE_NOW);
          YU_F_CAN_SEND(0,0x1FF,1000,1000,1000,100);
-usleep(1);
+         usleep(1);
     }
 
 }

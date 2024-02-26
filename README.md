@@ -81,7 +81,6 @@ socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
   - [ ] CMake,gitignore的的高级运用
   - [ ] RUI的代码吃透
 - [ ] 我的小计划
-  - [ ] 目前没想好
   - [x] 弄清终端只有THREAD_3运行的原因。完成测试线程的运行。
   - [x] 弄清THREAD_3的终端反馈。
   - [ ] 将线程包装成函数
@@ -89,3 +88,7 @@ socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
   - [ ] 熟悉ini配置文件用法
   - [ ] 读取修改代码
   - [ ] 配合UDP+上位机修改配置文件
+- [ ] 代码研究
+  - [ ] select函数后can+1的用法
+  - [ ] UDP通讯解析，研究代码
+  - [ ] ini研究
