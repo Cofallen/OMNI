@@ -25,6 +25,7 @@ struct YU_TYPEDEF_DEBUG
     struct YU_TYPEDEF_MOTOR_PID PID_S;
     struct YU_TYPEDEF_MOTOR_PID PID_C;  //电流环
 };
+
 extern struct YU_TYPEDEF_DEBUG YU_V_DEBUG[10];
 
 

@@ -5,6 +5,7 @@
 * 2024-01-20 今天基本完成RUI留的作业，距离回家还有两个小时，抓紧准备一下
 * 2024-01-21 现在主要还是线程安排，socket CAN 的应用。不知道为什么测试线程没run。
 * 2024-02-25 解决了VOFA不能用的问题
+* 2024-03-02 `CONFIG`编译成功
 
 
 ## 问题
@@ -58,8 +59,11 @@ struct sockaddr_in SERVER_ADDR = {}, CLIENT_ADDR = {};
 socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
 ```
 
-- [ ] `main.cpp`中线程3注释掉的部分编译不过
-- [ ] UDP 解算一点也没看懂，就没写
+~~- [ ] `main.cpp`中线程3注释掉的部分编译不过~~
+- [x] UDP 解算一点也没看懂，就没写
+
+这个需要整理的有点多，整理先放放，先把地盘搓了。
+
 - [x] 只有这一个线程跑了，目前没有看到其他线程运行
 
 
@@ -85,10 +89,10 @@ socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
   - [x] 弄清THREAD_3的终端反馈。
   - [ ] 将线程包装成函数
 - [ ] 配置文件
-  - [ ] 熟悉ini配置文件用法
-  - [ ] 读取修改代码
+  - [x] 熟悉ini配置文件用法
+  - [x] 读取修改代码
   - [ ] 配合UDP+上位机修改配置文件
 - [ ] 代码研究
-  - [ ] select函数后can+1的用法
+  - [x] select函数后can+1的用法
   - [ ] UDP通讯解析，研究代码
-  - [ ] ini研究
+  - [x] ini研究

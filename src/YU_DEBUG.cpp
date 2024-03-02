@@ -16,8 +16,56 @@
 struct YU_TYPEDEF_DEBUG YU_V_DEBUG[10]{ };
 
 // UDP 数据解算，一堆看不懂的东西
+// 经过我不懈努力，终于能看懂部分了，先写写
+
+static void YU_F_SET_A_P(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_A.IN.KP = value;}
+static void YU_F_SET_A_I(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_A.IN.KI = value;}
+static void YU_F_SET_A_D(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_A.IN.KD = value;}
+static void YU_F_SET_A_ILIT(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_A.IN.I_LIT = value;}
+static void YU_F_SET_A_ALIT(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_A.IN.ALL_LIT = value;}
+
+static void YU_F_SET_S_P(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_S.IN.KP = value;}
+static void YU_F_SET_S_I(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_S.IN.KI = value;}
+static void YU_F_SET_S_D(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_S.IN.KD = value;}
+static void YU_F_SET_S_ILIT(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_S.IN.I_LIT = value;}
+static void YU_F_SET_S_ALIT(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_S.IN.ALL_LIT = value;}
+
+static void YU_F_SET_C_P(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_C.IN.KP = value;}
+static void YU_F_SET_C_I(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_C.IN.KI = value;}
+static void YU_F_SET_C_D(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_C.IN.KD = value;}
+static void YU_F_SET_C_ILIT(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_C.IN.I_LIT = value;}
+static void YU_F_SET_C_ALIT(YU_TYPEDEF_DEBUG &MOTOR, const float &value) { MOTOR.PID_C.IN.ALL_LIT = value;}
 
 
+static void YU_F_RECEIVE_SOLVE(const char *NAME, const float *DATA, int8_t MOTOR_TYPE)
+{
+    static const std::unordered_map<std::string, void (*)(YU_TYPEDEF_DEBUG &, const float &)> SETTER_MAP = {
+            {"PID_A_P", YU_F_SET_A_P},
+            {"PID_A_I", YU_F_SET_A_I},
+            {"PID_A_D", YU_F_SET_A_D},
+            {"A_I_LIT", YU_F_SET_A_ILIT},
+            {"A_A_LIT", YU_F_SET_A_ALIT},
+
+            {"PID_S_P", YU_F_SET_S_P},
+            {"PID_S_I", YU_F_SET_S_I},
+            {"PID_S_D", YU_F_SET_S_D},
+            {"S_I_LIT", YU_F_SET_S_ILIT},
+            {"S_A_LIT", YU_F_SET_S_ALIT},
+
+            {"PID_C_P", YU_F_SET_C_P},
+            {"PID_C_I", YU_F_SET_C_I},
+            {"PID_C_D", YU_F_SET_C_D},
+            {"C_I_LIT", YU_F_SET_C_ILIT},
+            {"C_A_ALIT", YU_F_SET_C_ALIT},
+
+    };
+
+    auto IT = SETTER_MAP.find(std::string(NAME,7));
+    if (IT != SETTER_MAP.end())
+    {
+        IT->second(YU_V_DEBUG[MOTOR_TYPE],*DATA);
+    }
+}
 
 
 // DEBUG 线程
@@ -101,22 +149,18 @@ void YU_F_DEBUG_THREAD()
         exit(1);
     }
 
-    // 暂时看不懂，如何获取ip地址
-//    for (; IFADDRS != nullptr; IFADDRS = IFADDRS->ifa_next)
-//    {
-//        if (IFADDRS->ifa_addr == nullptr)
-//        {
-//            continue;
-//        }
-//        if (IFADDRS->ifa_addr->sa_family == AF_INET)
-//        {
-//            auto *IPV4 = (struct sockaddr_in *) IFADDRS->ifa_addr;
-//            inet_ntop(AF_INET, &IPV4->sin_addr, IPSTR, sizeof IPSTR);
-//            RUI_D_LOG_INFO("UDP服务端 IP:%-15s 端口:12345", IPSTR);
-//        }
-//    }
-//
-//    freeifaddrs(IFADDRS);
+    struct ifaddrs * ifa;
+    for(ifa = IFADDRS; ifa!= nullptr; ifa = ifa->ifa_next)
+    {
+        if (ifa->ifa_addr == nullptr || ifa->ifa_addr->sa_family != AF_INET)
+            continue;
+        if (ifa->ifa_addr->sa_family == AF_INET)
+        {
+            auto *IPV4 = (struct sockaddr_in *)ifa->ifa_addr;
+            inet_ntop(AF_INET,&IPV4->sin_addr,IPSTR,sizeof (IPSTR));
+            printf("Interface: %s\t Address: %s\n", ifa->ifa_name, IPSTR);
+        }
+    }
 
     int8_t YU_V_MOTOR_TYPE = 0;
 

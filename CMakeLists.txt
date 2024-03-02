@@ -40,6 +40,10 @@ add_executable(demo ${SOURCES}
         inc/YU_DEFINE.h
         inc/YU_DEFINE.h
         src/YU_TOP.cpp
-        inc/YU_TOP.h)
+        inc/YU_TOP.h
+        src/YU_CONFIG.cpp
+        inc/YU_CONFIG.h
+        src/YU_PID.cpp
+        inc/YU_PID.h)
 
 target_link_libraries(demo pthread)
