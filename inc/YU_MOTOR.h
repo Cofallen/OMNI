@@ -17,14 +17,17 @@ struct YU_TYPEDEF_MOTOR_DATA
     int16_t SPEED_NOW;
     int16_t CURRENT;
     int32_t ANGLE_INFINITE;
-    int16_t ANGLE_INIT;
-    int16_t ANGLE_RELATIVE; // 相对角度
+
     uint16_t STUCK_TIME;
     int16_t LAPS;
     float AIM;
     float AIM_LAST;
 
     int16_t TEMP;
+
+    int ANGLE_INIT;       //云台初始角度
+    int ANGLE_MAX;        //云台最大角度
+    int ANGLE_MIN;        //云台最小角度
 };
 
 // PID参数模板

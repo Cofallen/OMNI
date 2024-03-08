@@ -11,6 +11,7 @@
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
             <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nx" />
+            <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nx" />
             <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
             <excludedPath local="true" path="$PROJECT_DIR$/build/release" />
             <excludedPath local="true" path="$PROJECT_DIR$/build/release" />

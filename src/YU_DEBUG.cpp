@@ -171,9 +171,19 @@ void YU_F_DEBUG_THREAD()
         if (recvfrom(YU_U_SERVER_FD,YU_U_RECV.ALL,sizeof (YU_U_RECV.ALL),0,(struct sockaddr *)&YU_U_CLIENT_ADDR,&YU_U_CLIENT_ADDR_LEN) > 0)
         {
             // UDP 解算
+
+            char CLIENT_IP[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &YU_U_CLIENT_ADDR.sin_addr, CLIENT_IP, INET_ADDRSTRLEN);
+            if (strncmp(YU_U_RECV.PACKAGE.NAME, "_MOTOR_", 7) == 0)
+            {
+                YU_V_MOTOR_TYPE = (int8_t) strtof((char *) &YU_U_RECV.PACKAGE.DATA, nullptr);
+            }
+            auto YU_V_TEMP_RE_DATA = strtof((char *) &YU_U_RECV.PACKAGE.DATA, nullptr);
+            YU_F_RECEIVE_SOLVE((const char *) &YU_U_RECV.PACKAGE.NAME, &YU_V_TEMP_RE_DATA, YU_V_MOTOR_TYPE);
+
         }
 
-        // 发送,TM看不懂
+        // 发送,TM看懂
         memcpy(&YU_U_SEND.PACKAGE.YU_V_DEBUG,&YU_V_DEBUG[YU_V_MOTOR_TYPE],sizeof (YU_TYPEDEF_DEBUG));
 
         sendto(YU_U_SERVER_FD,YU_U_SEND.ALL,sizeof (YU_U_SEND.ALL),0,(struct sockaddr *)&YU_U_CLIENT_ADDR,YU_U_CLIENT_ADDR_LEN);

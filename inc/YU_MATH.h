@@ -5,4 +5,8 @@
 #ifndef DEMO_YU_MATH_H
 #define DEMO_YU_MATH_H
 
+#include "cstdint"
+
+#define YU_D_MATH_LIMIT(MAX, MIN, DATA) ((DATA > MAX) ? MAX : ((DATA < MIN) ? MIN : DATA))
+
 #endif //DEMO_YU_MATH_H
