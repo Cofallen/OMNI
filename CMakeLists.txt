@@ -47,7 +47,13 @@ add_executable(demo ${SOURCES}
         inc/YU_PID.h
         src/YU_CHASSIS.cpp
         inc/YU_CHASSIS.h
-        src/UART.cpp
-        inc/UART.h)
+        src/YU_UART.cpp
+        inc/YU_UART.h
+        src/YU_ROOT_INIT.cpp
+        inc/YU_ROOT_INIT.h
+        inc/YU_ROOT_INIT.h
+        src/YU_THREAD.cpp
+        inc/YU_THREAD.h
+)
 
 target_link_libraries(demo pthread)

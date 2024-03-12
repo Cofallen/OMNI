@@ -31,6 +31,10 @@ void say_hello(void )
     sleep(100);
 }
 
+
+thread UART;
+thread YU_THREAD_CHASSIS;
+
 int main()
 {
     // 初始化

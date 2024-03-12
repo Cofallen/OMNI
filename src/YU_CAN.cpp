@@ -140,8 +140,23 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
             default:break;
 
         }
+    }
 
-        // 底盘解算先不写
+    else
+    {
+        switch (CAN_ID)
+        {
+            case YU_D_CAN_ID_CHASSIS_1:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_1], CAN_DATA, YU_D_MOTOR_TYPE_3508, YU_D_STATUS_ID_CHASSIS_MOTOR_1);
+                break;
+            case YU_D_CAN_ID_CHASSIS_2:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_2], CAN_DATA, YU_D_MOTOR_TYPE_3508, YU_D_STATUS_ID_CHASSIS_MOTOR_2);
+                break;
+            case YU_D_CAN_ID_CHASSIS_3:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_3], CAN_DATA, YU_D_MOTOR_TYPE_3508, YU_D_STATUS_ID_CHASSIS_MOTOR_3);
+                break;
+            case YU_D_CAN_ID_CHASSIS_4:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_4], CAN_DATA, YU_D_MOTOR_TYPE_3508, YU_D_STATUS_ID_CHASSIS_MOTOR_4);
+                break;
+
+            default:break;
+        }
     }
 
     return  1;

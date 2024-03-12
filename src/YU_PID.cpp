@@ -200,3 +200,57 @@ int YU_F_MOTOR_PID_INIT(YU_TYPEDEF_MOTOR *MOTOR, int MOD)
         }
     return true;
 }
+
+/**
+ * @brief               自己写的PID初始化，不用读配置文件
+ * @details             传入PID基本参数， 通过数组
+ * @param PID       :   PID 指针，  形式 : MOTOR->PID
+ * @param PID_V     :   5个float, 参数和限幅
+ * @date                2024-03-12
+ * @author              YU
+ */
+void YU_T_PID_INIT(YU_TYPEDEF_MOTOR_PID *PID, const float *PID_V)
+{
+    if (PID == nullptr || PID_V == nullptr)
+    {
+        return;
+    }
+
+    PID->IN.KP      = PID_V[0];
+    PID->IN.KI      = PID_V[1];
+    PID->IN.KD      = PID_V[2];
+    PID->IN.I_LIT   = PID_V[3];
+    PID->IN.ALL_LIT = PID_V[4];
+
+    PID->OUT.ERROR[0] = 0.0f;
+    PID->OUT.ERROR[1] = 0.0f;
+}
+
+/**
+ * @brief               PID 解算
+ * @details             PID 解算
+ * @param PID       :   PID 指针，  形式 : MOTOR->PID
+ * @param TARGET    :   目标值
+ * @param REALVAL   :   实际值
+ * @return
+ */
+float YU_T_PID_CAL(YU_TYPEDEF_MOTOR_PID *PID, float TARGET, float REALVAL)
+{
+    if (PID == nullptr)
+    {
+        return 0.0f;
+    }
+
+    PID->OUT.ERROR[YU_D_LAST] = PID->OUT.ERROR[YU_D_NOW];
+    PID->OUT.ERROR[YU_D_NOW] = TARGET - REALVAL;
+
+    PID->OUT.P_OUT   = PID->IN.KP * PID->OUT.ERROR[YU_D_NOW];
+    PID->OUT.I_OUT  += PID->IN.KI * PID->OUT.ERROR[YU_D_NOW];
+    PID->OUT.D_OUT   = PID->IN.KD * (PID->OUT.ERROR[YU_D_NOW] - PID->OUT.ERROR[YU_D_LAST]);
+    PID->OUT.ALL_OUT = PID->OUT.P_OUT + PID->OUT.I_OUT + PID->OUT.D_OUT;
+
+    PID->OUT.I_OUT   = YU_D_MATH_LIMIT(PID->IN.I_LIT,   -PID->IN.I_LIT,   PID->OUT.I_OUT);
+    PID->OUT.ALL_OUT = YU_D_MATH_LIMIT(PID->IN.ALL_LIT, -PID->IN.ALL_LIT, PID->OUT.ALL_OUT);
+
+    return PID->OUT.ALL_OUT;
+}
