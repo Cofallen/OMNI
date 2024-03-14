@@ -54,6 +54,8 @@ add_executable(demo ${SOURCES}
         inc/YU_ROOT_INIT.h
         src/YU_THREAD.cpp
         inc/YU_THREAD.h
+        src/YU_GIMBAL.cpp
+        inc/YU_GIMBAL.h
 )
 
 target_link_libraries(demo pthread)

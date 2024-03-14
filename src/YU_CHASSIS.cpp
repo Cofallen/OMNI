@@ -11,12 +11,10 @@
 
 #include <cmath>
 
-
 // 数据
 Chassis_Typedef ChassisData;
 Mecanum_Typedef MecanumData;
 float MECANUM_TARGET[4] = {0};
-
 
 /**
  * @brief 地盘功率分配
@@ -41,7 +39,7 @@ float *YU_F_CALCULATE_WHEELPOWERS(const float TURNFAACTOR)
  * @date 2024-03-12
  * @author YU
  */
-void YU_F_CHASSIS()
+void YU_F_CHASSIS_INIT()
 {
 // 小车基本物理量
     MecanumData.Wheel_Perimeter = 478;
@@ -68,11 +66,10 @@ void YU_F_CHASSIS()
 
 /**
  * @brief 自己写的麦轮地盘函数，不知道能不能用
- * @details 解算，获取目标值
- * @param MOTOR
+ * @details 解算，将遥控数据转化成电机目标值
  * @param DBUS
  */
-void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_DBUS *DBUS)
+void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS)
 {
     // 将遥控器摇杆数据保存，便于使用
     float REMOTE[4] = {0};                        // 用来做限幅，不破坏遥控起原数据

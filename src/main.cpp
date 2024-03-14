@@ -12,7 +12,7 @@
 #include "YU_MATH.h"
 #include "YU_MOTOR.h"
 #include "YU_TOP.h"
-
+#include "YU_THREAD.h"
 
 using namespace std;
 

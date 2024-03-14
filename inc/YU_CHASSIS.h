@@ -8,10 +8,6 @@
 #include "YU_MOTOR.h"
 #include "YU_UART.h"
 
-extern float MECANUM_TARGET[4];
-extern struct Chassis_Typedef ChassisData;
-extern struct Mecanum_Typedef MecanumData;
-
 // 弧度转化角度
 #define radian_angle 57.3f
 
@@ -59,8 +55,13 @@ typedef struct Mecanum_Typedef
 
 float *YU_F_CALCULATE_WHEELPOWERS(const float TURNFAACTOR);
 
-void YU_F_CHASSIS();
-void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_DBUS *DBUS);
+extern float MECANUM_TARGET[4];
+extern struct Chassis_Typedef ChassisData;
+extern struct Mecanum_Typedef MecanumData;
+
+
+void YU_F_CHASSIS_INIT();
+void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS);
 void YU_F_CHASSIS_MECANUM_SEND(YU_TYPEDEF_MOTOR *MOTOR);
 
 #endif //DEMO_YU_CHASSIS_H

@@ -9,10 +9,14 @@
 #include "YU_UART.h"
 #include "YU_THREAD.h"
 
-// 遥控数据
-YU_TYPEDEF_DBUS YU_V_DBUS;
+/**                    全局变量定义                    **/
+YU_TYPEDEF_DBUS YU_V_DBUS;      //遥控数据
 
-[[noreturn]]static void YU_F_THREAD_CHASSIS_MECANUM()
+
+/**                    全局变量定义                    **/
+
+
+[[noreturn]] void YU_F_THREAD_CHASSIS_MECANUM()
 {
     const float YU_V_PID_CHASSIS[5] = {5,0.1,0,1000,3000};
     YU_TYPEDEF_MOTOR YU_V_MOTOR_CHASSIS[4];
@@ -23,6 +27,8 @@ YU_TYPEDEF_DBUS YU_V_DBUS;
     YU_T_PID_INIT(&YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_3].PID_S,YU_V_PID_CHASSIS);
     YU_T_PID_INIT(&YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_4].PID_S,YU_V_PID_CHASSIS);
 
+    YU_F_CHASSIS_INIT();
+
     while (true)
     {
         YU_F_CAN_RECV(&YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_1], &YU_V_TOP_DATA, 0);
@@ -30,7 +36,7 @@ YU_TYPEDEF_DBUS YU_V_DBUS;
         YU_F_CAN_RECV(&YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_3], &YU_V_TOP_DATA, 0);
         YU_F_CAN_RECV(&YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_4], &YU_V_TOP_DATA, 0);
 
-        YU_F_CHASSIS_MECANUM(YU_V_MOTOR_CHASSIS, &YU_V_DBUS);
+        YU_F_CHASSIS_MECANUM(&YU_V_DBUS);
         YU_F_CHASSIS_MECANUM_SEND(YU_V_MOTOR_CHASSIS);
     }
 
