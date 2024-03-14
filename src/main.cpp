@@ -18,9 +18,8 @@ using namespace std;
 
 // 变量
 YU_TYPEDEF_MOTOR GM6020;
-YU_TYPEDEF_MOTOR MOTOR[10];
 
-YU_TYPEDEF_TOP GM6020_TOP;
+
 uint8_t YU_C_DATA[8]{ };
 uint32_t YU_C_TYPE;
 
@@ -32,20 +31,19 @@ void say_hello(void )
 }
 
 
-thread UART;
-thread YU_THREAD_CHASSIS;
+
 
 int main()
 {
     // 初始化
     YU_F_CAN_INIT();
 
-    while (1)
-    {
-         YU_F_CAN_RECV(MOTOR,&GM6020_TOP ,0);
-         printf("ANGLE:%d\n",MOTOR[4].DATA.ANGLE_NOW);
-         YU_F_CAN_SEND(0,0x1FF,1000,1000,1000,100);
-         usleep(1);
-    }
+    thread T_UART(YU_F_DBUS_THREAD, &YU_V_DBUS);
+    thread T_CHASSIS(YU_F_THREAD_CHASSIS_MECANUM);
+    thread T_TEST(YU_F_THREAD_TEST);
+
+    T_TEST.join();
+    T_CHASSIS.join();
+    T_UART.join();
 
 }

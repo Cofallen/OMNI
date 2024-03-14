@@ -11,5 +11,7 @@ extern YU_TYPEDEF_DBUS YU_V_DBUS;
 
 
 [[noreturn]] void YU_F_THREAD_CHASSIS_MECANUM();
+[[noreturn]] void YU_F_THREAD_TEST();
+
 
 #endif //DEMO_YU_THREAD_H

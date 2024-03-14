@@ -80,6 +80,7 @@
 
     memset(YU_V_DBUS_UNION.GET_DATA, 0, sizeof (YU_V_DBUS_UNION.GET_DATA));
 
+#ifdef YU_DEBUG_DBUS_RECTIFY
     // 确保能接收到遥控器数据后
     while (YU_V_DBUS->REMOTE.S1_u8 == 0 || YU_V_DBUS->REMOTE.S2_u8 == 0)
     {
@@ -91,7 +92,7 @@
             YU_V_DBUS->REMOTE.S2_u8 = YU_V_DBUS_UNION.DATA_NEATEN.S2;
         }
     }
-
+#endif
     // 遥控器矫正先不写
 
 
@@ -122,6 +123,16 @@
             YU_V_DBUS->R_FLAG = CORRECTION_ARRAY[CORRENTION_CHOSE_R][YU_V_DBUS->REMOTE.S2_u8 - 1];
 
         }
+
+#ifdef YU_DEBUG_DBUS
+        printf("收到遥控器数据\n");
+        printf("ch0=  %8d  ch1=  %8d\n"
+               "ch2=  %8d  ch3=  %8d\n",
+               YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
+               YU_V_DBUS->REMOTE.CH2_int16, YU_V_DBUS->REMOTE.CH3_int16);
+
+        memset(YU_V_DBUS, 0, sizeof (*YU_V_DBUS));
+#endif
 
 //        if (YU_V_MONITOR.STATUS[YU_D_NOW][YU_D_STATUS_ID_DBUS] == YU_D_STATUS_OFF)
 //        {

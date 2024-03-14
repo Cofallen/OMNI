@@ -10,9 +10,10 @@
 #include "YU_THREAD.h"
 
 /**                    全局变量定义                    **/
-YU_TYPEDEF_DBUS YU_V_DBUS;      //遥控数据
+YU_TYPEDEF_DBUS YU_V_DBUS;      // 遥控数据
 
-
+YU_TYPEDEF_MOTOR MOTOR[10];     // 测试电机数据，用第4个 0x205
+YU_TYPEDEF_TOP GM6020_TOP;      // 测试电机
 /**                    全局变量定义                    **/
 
 
@@ -42,3 +43,14 @@ YU_TYPEDEF_DBUS YU_V_DBUS;      //遥控数据
 
 }
 
+[[noreturn]] void YU_F_THREAD_TEST()
+{
+    while (true)
+    {
+        YU_F_CAN_RECV(MOTOR,&GM6020_TOP ,0);
+        printf("ANGLE:%d\n",MOTOR[4].DATA.ANGLE_NOW);
+        YU_F_CAN_SEND(0,0x1FF,1000,1000,1000,100);
+        usleep(1);
+    }
+
+}

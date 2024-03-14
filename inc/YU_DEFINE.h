@@ -12,6 +12,17 @@
 #define DEMO_YU_DEFINE_H
 
 
+/**               DEBUG                **/
+
+#define YU_DEBUG_DBUS 1
+
+//#define YU_DEBUG_DBUS_RECTIFY 1
+
+/**               DEBUG                **/
+
+
+
+
 /*****************************离线检测**********************************/
 //需要离线检测的设备数量
 #define YU_D_STATUS_NUM               11
