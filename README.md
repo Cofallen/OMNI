@@ -92,7 +92,7 @@ socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
   - [x] 读取修改代码
   - [ ] 配合UDP+上位机修改配置文件
 - [ ] 遗留的坑
-  -[ ] UDP发送上位机
+  - [ ] UDP发送上位机
 - [ ] 代码整理
   - [ ] socket CAN 通信整理
   - [ ] 多线程的高级运用
