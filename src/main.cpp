@@ -40,10 +40,12 @@ int main()
 
     thread T_UART(YU_F_DBUS_THREAD, &YU_V_DBUS);
     thread T_CHASSIS(YU_F_THREAD_CHASSIS_MECANUM);
+    thread T_MONITOR(YU_F_THREAD_MONITOR);
 //    thread T_TEST(YU_F_THREAD_TEST);
 
 //    T_TEST.join();
     T_CHASSIS.join();
     T_UART.join();
+    T_MONITOR.join();
 
 }

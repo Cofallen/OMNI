@@ -82,8 +82,8 @@
 #define YU_D_MOTOR_CHASSIS_3      2
 #define YU_D_MOTOR_CHASSIS_4      3
 //云台电机
-#define YU_D_MOTOR_GIMBAL_YAW    4
-#define YU_D_MOTOR_GIMBAL_PIT    3
+#define YU_D_MOTOR_GIMBAL_YAW    0
+#define YU_D_MOTOR_GIMBAL_PIT    1
 #define YU_D_MOTOR_ATTACK_L      1
 #define YU_D_MOTOR_ATTACK_R      0
 #define YU_D_MOTOR_ATTACK_G      2

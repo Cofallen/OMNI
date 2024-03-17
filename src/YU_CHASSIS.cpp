@@ -78,14 +78,31 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS)
     REMOTE[2] = -(float)DBUS->REMOTE.CH2_int16;
     REMOTE[3] = (float)DBUS->REMOTE.CH3_int16;    // 算追踪的， 先不写
 
+    if (YU_D_MATH_ABS(REMOTE[0]) < 20)
+    {
+        REMOTE[0] = 0;
+    }
+    if (YU_D_MATH_ABS(REMOTE[1]) < 20)
+    {
+        REMOTE[1] = 0;
+    }
+    if (YU_D_MATH_ABS(REMOTE[2]) < 20)
+    {
+        REMOTE[2] = 0;
+    }
+    if (YU_D_MATH_ABS(REMOTE[3]) < 20)
+    {
+        REMOTE[3] = 0;
+    }
+
     REMOTE[0] = YU_D_MATH_LIMIT(MecanumData.Max_vx_Speed, -MecanumData.Max_vx_Speed, REMOTE[0]);
     REMOTE[1] = YU_D_MATH_LIMIT(MecanumData.Max_vy_Speed, -MecanumData.Max_vy_Speed, REMOTE[1]);
     REMOTE[2] = YU_D_MATH_LIMIT(MecanumData.Max_vr_Speed, -MecanumData.Max_vr_Speed, REMOTE[2]);
 
-    MecanumData.Mecanum_Out[0] = ( REMOTE[0] + REMOTE[1] - REMOTE[2] * MecanumData.Raid_FL) * MecanumData.Wheel_rpm_ratio;
-    MecanumData.Mecanum_Out[1] = (-REMOTE[0] + REMOTE[1] - REMOTE[2] * MecanumData.Raid_FR) * MecanumData.Wheel_rpm_ratio;
-    MecanumData.Mecanum_Out[2] = (-REMOTE[0] - REMOTE[1] - REMOTE[2] * MecanumData.Raid_BR) * MecanumData.Wheel_rpm_ratio;
-    MecanumData.Mecanum_Out[3] = ( REMOTE[0] - REMOTE[1] - REMOTE[2] * MecanumData.Raid_BL) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[0] = ( REMOTE[1] + REMOTE[0] - REMOTE[2] * MecanumData.Raid_FL) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[1] = (-REMOTE[1] + REMOTE[0] - REMOTE[2] * MecanumData.Raid_FR) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[2] = (-REMOTE[1] - REMOTE[0] - REMOTE[2] * MecanumData.Raid_BR) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[3] = ( REMOTE[1] - REMOTE[0] - REMOTE[2] * MecanumData.Raid_BL) * MecanumData.Wheel_rpm_ratio;
 
 //    printf("MOTOR1:  %f  MOTOR2:  %f\nMOTOR3:  %f  MOTOR4:  %f\n",
 //           MecanumData.Mecanum_Out[0],
