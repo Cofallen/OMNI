@@ -16,6 +16,7 @@
 #include <sys/ioctl.h>
 
 #include "YU_DEFINE.h"
+#include "YU_ROOT_INIT.h"
 
 typedef struct YU_TYPEDEF_DBUS
 {
@@ -51,7 +52,7 @@ typedef struct YU_TYPEDEF_DBUS
         uint8_t L_PRESS_TIME;
     } MOUSE;
 
-} YU_TYPEDEF_DBUS;
+} YU_TYPEDEF_DBUS_;
 
 union YU_TYPEDEF_DBUS_UNION // 使用共用体整合数据
 {
@@ -72,6 +73,7 @@ union YU_TYPEDEF_DBUS_UNION // 使用共用体整合数据
     // 接收到的数组
     uint8_t GET_DATA[19];
 };
+
 
 
 [[noreturn]] void YU_F_DBUS_THREAD(YU_TYPEDEF_DBUS *YU_V_DBUS);

@@ -119,7 +119,7 @@ bool YU_F_CAN_INIT(void)
  */
 static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DATA,uint8_t can,u_int32_t CAN_ID,uint8_t *CAN_DATA)
 {
-    if (can == YU_D_CAN_1)
+    if (can == YU_D_CAN_2)
     {
 //        printf("CANID%x\n",CAN_ID);
         // 这几个解算也看不懂

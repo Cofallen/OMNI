@@ -9,11 +9,16 @@
 #include "YU_UART.h"
 #include "YU_THREAD.h"
 
+//#define YU_DEBUG_CHASSIS 1
+
 /**                    全局变量定义                    **/
 YU_TYPEDEF_DBUS YU_V_DBUS;      // 遥控数据
 
 YU_TYPEDEF_MOTOR MOTOR[10];     // 测试电机数据，用第4个 0x205
 YU_TYPEDEF_TOP GM6020_TOP;      // 测试电机
+
+YU_TYPEDEF_MONITOR_DBUS YU_V_MONITOR_DBUS;
+
 /**                    全局变量定义                    **/
 
 
@@ -32,11 +37,15 @@ YU_TYPEDEF_TOP GM6020_TOP;      // 测试电机
 
     while (true)
     {
-        YU_F_CAN_RECV(&YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_1], &YU_V_TOP_DATA, 0);
-        YU_F_CAN_RECV(&YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_2], &YU_V_TOP_DATA, 0);
-        YU_F_CAN_RECV(&YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_3], &YU_V_TOP_DATA, 0);
-        YU_F_CAN_RECV(&YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_4], &YU_V_TOP_DATA, 0);
-
+        YU_F_CAN_RECV(YU_V_MOTOR_CHASSIS, &YU_V_TOP_DATA, 0);
+#ifdef YU_DEBUG_CHASSIS
+        printf("AMOTOR1:  %d  AMOTOR2:  %d\nAMOTOR3:  %d  AMOTOR4:  %d\n",
+               YU_V_MOTOR_CHASSIS[0].DATA.ANGLE_NOW,
+               YU_V_MOTOR_CHASSIS[1].DATA.ANGLE_NOW,
+               YU_V_MOTOR_CHASSIS[2].DATA.ANGLE_NOW,
+               YU_V_MOTOR_CHASSIS[3].DATA.ANGLE_NOW
+        );
+#endif
         YU_F_CHASSIS_MECANUM(&YU_V_DBUS);
         YU_F_CHASSIS_MECANUM_SEND(YU_V_MOTOR_CHASSIS);
     }
@@ -53,4 +62,30 @@ YU_TYPEDEF_TOP GM6020_TOP;      // 测试电机
         usleep(1);
     }
 
+}
+
+
+[[noreturn]] void YU_F_THREAD_MONITOR()
+{
+    YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_DBUS_OFFLINE;
+    YU_V_MONITOR_DBUS.TIME = 0;
+
+    while (true)
+    {
+        usleep(1);
+        YU_V_MONITOR_DBUS.TIME++;
+        if (YU_V_MONITOR_DBUS.TIME >= 100)
+        {
+            YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_DBUS_OFFLINE;
+        } else
+        {
+            YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_DBUS_ONLINE;
+        }
+
+        if (YU_V_MONITOR_DBUS.STATUS == YU_D_MONITOR_DBUS_OFFLINE)
+        {
+            memset(&YU_V_DBUS, 0, sizeof (YU_V_DBUS));
+            printf("DBUS OFFLINE\n");
+        }
+    }
 }

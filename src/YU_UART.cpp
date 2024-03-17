@@ -5,6 +5,7 @@
 #include "YU_CONFIG.h"
 #include "stdio.h"
 #include "YU_ROOT_INIT.h"
+#include "YU_THREAD.h"
 
 // 这个有问题
 //struct YU_TYPEDEF_MONITOR YU_V_MONITOR{ };
@@ -48,7 +49,7 @@
     {
         printf("串口打开 FALIURE\n");
         perror("WRONG UART OPEN\n");
-//        exit(-1);
+        exit(-1);
     }
 
     // 阁下功力为何如此之强，待我闭关修炼，再说弄懂
@@ -71,7 +72,7 @@
 
         printf("WRONG\n");
         perror("Please check if UART EXISTS\n");
-//        exit(-1);
+        exit(-1);
     }
 
     printf("UART INIT OK\n");
@@ -103,9 +104,8 @@
         usleep(1);
         auto DATA_FLAG = (int8_t) read(UART_FD, YU_V_DBUS_UNION.GET_DATA,sizeof (YU_V_DBUS_UNION.GET_DATA));
 
-        if (DATA_FLAG == 0)
+        if (DATA_FLAG > 0)
         {
-//            YU_V_MONITOR.TIME[YU_D_STATUS_ID_DBUS] = 100;
 
             YU_V_DBUS->REMOTE.S1_u8 = YU_V_DBUS_UNION.DATA_NEATEN.S1;
             YU_V_DBUS->REMOTE.S2_u8 = YU_V_DBUS_UNION.DATA_NEATEN.S2;
@@ -122,6 +122,9 @@
             YU_V_DBUS->L_FLAG = CORRECTION_ARRAY[CORRECTION_CHOSE_L][YU_V_DBUS->REMOTE.S1_u8 - 1];
             YU_V_DBUS->R_FLAG = CORRECTION_ARRAY[CORRENTION_CHOSE_R][YU_V_DBUS->REMOTE.S2_u8 - 1];
 
+            YU_V_MONITOR_DBUS.TIME = 0;
+
+
         }
 
 #ifdef YU_DEBUG_DBUS
@@ -131,13 +134,10 @@
                YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
                YU_V_DBUS->REMOTE.CH2_int16, YU_V_DBUS->REMOTE.CH3_int16);
 
-        memset(YU_V_DBUS, 0, sizeof (*YU_V_DBUS));
+//        memset(YU_V_DBUS, 0, sizeof (*YU_V_DBUS));
 #endif
 
-//        if (YU_V_MONITOR.STATUS[YU_D_NOW][YU_D_STATUS_ID_DBUS] == YU_D_STATUS_OFF)
-//        {
-//            memset(YU_V_DBUS, 0, sizeof (*YU_V_DBUS));
-//        }
+
     }
 }
 

@@ -75,7 +75,7 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS)
     float REMOTE[4] = {0};                        // 用来做限幅，不破坏遥控起原数据
     REMOTE[0] = (float)DBUS->REMOTE.CH0_int16;
     REMOTE[1] = (float)DBUS->REMOTE.CH1_int16;
-    REMOTE[2] = (float)DBUS->REMOTE.CH2_int16;
+    REMOTE[2] = -(float)DBUS->REMOTE.CH2_int16;
     REMOTE[3] = (float)DBUS->REMOTE.CH3_int16;    // 算追踪的， 先不写
 
     REMOTE[0] = YU_D_MATH_LIMIT(MecanumData.Max_vx_Speed, -MecanumData.Max_vx_Speed, REMOTE[0]);
@@ -86,6 +86,13 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS)
     MecanumData.Mecanum_Out[1] = (-REMOTE[0] + REMOTE[1] - REMOTE[2] * MecanumData.Raid_FR) * MecanumData.Wheel_rpm_ratio;
     MecanumData.Mecanum_Out[2] = (-REMOTE[0] - REMOTE[1] - REMOTE[2] * MecanumData.Raid_BR) * MecanumData.Wheel_rpm_ratio;
     MecanumData.Mecanum_Out[3] = ( REMOTE[0] - REMOTE[1] - REMOTE[2] * MecanumData.Raid_BL) * MecanumData.Wheel_rpm_ratio;
+
+//    printf("MOTOR1:  %f  MOTOR2:  %f\nMOTOR3:  %f  MOTOR4:  %f\n",
+//           MecanumData.Mecanum_Out[0],
+//           MecanumData.Mecanum_Out[1],
+//           MecanumData.Mecanum_Out[2],
+//           MecanumData.Mecanum_Out[3]
+//    );
 
     float TEMPMAX = 0.0f;
     for (int i = 0; i < 4; ++i)
@@ -111,6 +118,13 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS)
         MECANUM_TARGET[i] = MecanumData.Mecanum_Out[i];
     }
 
+//    printf("MOTOR1:  %f  MOTOR2:  %f\nMOTOR3:  %f  MOTOR4:  %f\n",
+//           MECANUM_TARGET[0],
+//           MECANUM_TARGET[1],
+//           MECANUM_TARGET[2],
+//           MECANUM_TARGET[3]
+//    );
+
 }
 
 /**
@@ -127,6 +141,13 @@ void YU_F_CHASSIS_MECANUM_SEND(YU_TYPEDEF_MOTOR *MOTOR)
     SPEED_SEND[YU_D_MOTOR_CHASSIS_3] = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_3].PID_S, MECANUM_TARGET[2], MOTOR->DATA.SPEED_NOW);
     SPEED_SEND[YU_D_MOTOR_CHASSIS_4] = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_4].PID_S, MECANUM_TARGET[3], MOTOR->DATA.SPEED_NOW);
 
-    YU_F_CAN_SEND(0, 0x2FF, SPEED_SEND[YU_D_MOTOR_CHASSIS_1], SPEED_SEND[YU_D_MOTOR_CHASSIS_2], SPEED_SEND[YU_D_MOTOR_CHASSIS_3], SPEED_SEND[YU_D_MOTOR_CHASSIS_4]);
+    printf("SMOTOR1:  %hd  SMOTOR2:  %hd\nSMOTOR3:  %hd  SMOTOR4:  %hd\n",
+           SPEED_SEND[0],
+           SPEED_SEND[1],
+           SPEED_SEND[2],
+           SPEED_SEND[3]
+    );
+
+    YU_F_CAN_SEND(0, 0x200, SPEED_SEND[YU_D_MOTOR_CHASSIS_1], SPEED_SEND[YU_D_MOTOR_CHASSIS_2], SPEED_SEND[YU_D_MOTOR_CHASSIS_3], SPEED_SEND[YU_D_MOTOR_CHASSIS_4]);
 
 }
