@@ -12,7 +12,7 @@ extern float GIMBAL_OUT[2];
 extern float GIMBAL_TARGET[2];
 
 void YU_F_GIMBAL(YU_TYPEDEF_DBUS *DBUS, int MOD);
-void YU_F_GIMBAL_SEND(YU_TYPEDEF_MOTOR *MOTOR, uint32_t ID);
+void YU_F_GIMBAL_CAL(YU_TYPEDEF_MOTOR *MOTOR, uint32_t ID);
 
 
 #endif //DEMO_YU_GIMBAL_H
