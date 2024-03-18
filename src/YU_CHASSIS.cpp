@@ -69,8 +69,9 @@ void YU_F_CHASSIS_INIT()
  * @details 解算，将遥控数据转化成电机目标值
  * @param DBUS
  */
-void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS)
+void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS, int MOD)
 {
+    if (MOD == YU_D_MOD_GIMBAL) return;
     // 将遥控器摇杆数据保存，便于使用
     float REMOTE[4] = {0};                        // 用来做限幅，不破坏遥控起原数据
     REMOTE[0] = (float)DBUS->REMOTE.CH0_int16;
@@ -78,16 +79,16 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS)
     REMOTE[2] = -(float)DBUS->REMOTE.CH2_int16;
     REMOTE[3] = (float)DBUS->REMOTE.CH3_int16;    // 算追踪的， 先不写
 
-    REMOTE[0] = YU_D_MATH_LIMIT(MecanumData.Max_vx_Speed, -MecanumData.Max_vx_Speed, REMOTE[0]);
-    REMOTE[1] = YU_D_MATH_LIMIT(MecanumData.Max_vy_Speed, -MecanumData.Max_vy_Speed, REMOTE[1]);
+    REMOTE[1] = YU_D_MATH_LIMIT(MecanumData.Max_vx_Speed, -MecanumData.Max_vx_Speed, REMOTE[1]);
+    REMOTE[0] = YU_D_MATH_LIMIT(MecanumData.Max_vy_Speed, -MecanumData.Max_vy_Speed, REMOTE[0]);
     REMOTE[2] = YU_D_MATH_LIMIT(MecanumData.Max_vr_Speed, -MecanumData.Max_vr_Speed, REMOTE[2]);
 
-    MecanumData.Mecanum_Out[0] = ( REMOTE[0] + REMOTE[1] - REMOTE[2] * MecanumData.Raid_FL) * MecanumData.Wheel_rpm_ratio;
-    MecanumData.Mecanum_Out[1] = (-REMOTE[0] + REMOTE[1] - REMOTE[2] * MecanumData.Raid_FR) * MecanumData.Wheel_rpm_ratio;
-    MecanumData.Mecanum_Out[2] = (-REMOTE[0] - REMOTE[1] - REMOTE[2] * MecanumData.Raid_BR) * MecanumData.Wheel_rpm_ratio;
-    MecanumData.Mecanum_Out[3] = ( REMOTE[0] - REMOTE[1] - REMOTE[2] * MecanumData.Raid_BL) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[0] = ( REMOTE[1] + REMOTE[0] - REMOTE[2] * MecanumData.Raid_FL) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[1] = (-REMOTE[1] + REMOTE[0] - REMOTE[2] * MecanumData.Raid_FR) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[2] = (-REMOTE[1] - REMOTE[0] - REMOTE[2] * MecanumData.Raid_BR) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[3] = ( REMOTE[1] - REMOTE[0] - REMOTE[2] * MecanumData.Raid_BL) * MecanumData.Wheel_rpm_ratio;
 
-//    printf("MOTOR1:  %f  MOTOR2:  %f\nMOTOR3:  %f  MOTOR4:  %f\n",
+//    printf("MOTOR1:  %f  MOTOR2:  %f  MOTOR3:  %f  MOTOR4:  %f\n",
 //           MecanumData.Mecanum_Out[0],
 //           MecanumData.Mecanum_Out[1],
 //           MecanumData.Mecanum_Out[2],
@@ -118,7 +119,7 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS)
         MECANUM_TARGET[i] = MecanumData.Mecanum_Out[i];
     }
 
-//    printf("MOTOR1:  %f  MOTOR2:  %f\nMOTOR3:  %f  MOTOR4:  %f\n",
+//    printf("TARGET:  MOTOR1:  %f  MOTOR2:  %f  MOTOR3:  %f  MOTOR4:  %f\n",
 //           MECANUM_TARGET[0],
 //           MECANUM_TARGET[1],
 //           MECANUM_TARGET[2],

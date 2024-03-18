@@ -31,8 +31,8 @@
     };
 
     // 矫正 选择
-    static int8_t CORRECTION_CHOSE_L = (int8_t) std::stof(CONFIG["DBUS"]["S_L"]);
-    static int8_t CORRENTION_CHOSE_R = (int8_t) std::stoi(CONFIG["DBUS"]["S_R"]);
+//    static int8_t CORRECTION_CHOSE_L = (int8_t) std::stof(CONFIG["DBUS"]["S_L"]);
+//    static int8_t CORRENTION_CHOSE_R = (int8_t) std::stoi(CONFIG["DBUS"]["S_R"]);
 
     int8_t UART_FD;
 
@@ -119,23 +119,21 @@
 
 
             // 发射标志位
-            YU_V_DBUS->L_FLAG = CORRECTION_ARRAY[CORRECTION_CHOSE_L][YU_V_DBUS->REMOTE.S1_u8 - 1];
-            YU_V_DBUS->R_FLAG = CORRECTION_ARRAY[CORRENTION_CHOSE_R][YU_V_DBUS->REMOTE.S2_u8 - 1];
+//            YU_V_DBUS->L_FLAG = CORRECTION_ARRAY[CORRECTION_CHOSE_L][YU_V_DBUS->REMOTE.S1_u8 - 1];
+//            YU_V_DBUS->R_FLAG = CORRECTION_ARRAY[CORRENTION_CHOSE_R][YU_V_DBUS->REMOTE.S2_u8 - 1];
 
             YU_V_MONITOR_DBUS.TIME = 0;
 
 
         }
 
-#ifdef YU_DEBUG_DBUS
-        printf("收到遥控器数据\n");
-        printf("ch0=  %8d  ch1=  %8d\n"
-               "ch2=  %8d  ch3=  %8d\n",
-               YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
-               YU_V_DBUS->REMOTE.CH2_int16, YU_V_DBUS->REMOTE.CH3_int16);
+
+//        printf("收到遥控器数据\n");
+//        printf("ch0=  %8d  ch1=  %8d  ch2=  %8d  ch3=  %8d\n",
+//               YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
+//               YU_V_DBUS->REMOTE.CH2_int16, YU_V_DBUS->REMOTE.CH3_int16);
 
 //        memset(YU_V_DBUS, 0, sizeof (*YU_V_DBUS));
-#endif
 
 
     }

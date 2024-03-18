@@ -8,23 +8,6 @@ include_directories(inc)
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-#set(SOURCES
-#        src/Test.cpp
-#        inc/Test.h
-#        src/YU_MATH.cpp
-#        inc/YU_MATH.h
-#        inc/YU_DEFINE.h
-#        src/YU_TOP.cpp
-#        inc/YU_TOP.h
-#        src/main.cpp
-#        inc/main.h
-#        src/YU_CAN.cpp
-#        inc/YU_CAN.h
-#        src/YU_DEBUG.cpp
-#        inc/YU_DEBUG.h
-#        src/YU_CAN.cpp
-#)
-
 #add_executable(demo ${SOURCES})
 add_executable(demo ${SOURCES}
 #        src/YU_CAN.cpp
