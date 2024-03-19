@@ -142,7 +142,7 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
         }
     }
 
-    else
+    else  // can == 0
     {
         switch (CAN_ID)
         {
@@ -159,7 +159,7 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
         }
     }
 
-    return  1;
+    return  true;
 }
 
 // CAN 接收先写旧版 有时间全看一遍，都不太懂
