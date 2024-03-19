@@ -9,6 +9,16 @@
 #include "YU_UART.h"
 #include "YU_THREAD.h"
 #include "YU_GIMBAL.h"
+#include "YU_DEBUG.h"
+
+#include <iostream>
+#include <cstring>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <ifaddrs.h>
 
 //#define YU_DEBUG_CHASSIS 1
 
@@ -118,5 +128,72 @@ YU_TYPEDEF_MONITOR_DBUS YU_V_MONITOR_DBUS;
 
         YU_F_GIMBAL_SEND(YU_V_MOTOR_GIMBAL);
 
+    }
+}
+
+
+[[noreturn]] void YU_F_THREAD_VOFA()
+{
+    YU_TYPEDEF_SEND_UNION YU_U_SEND{ };
+    YU_TYPEDEF_RECV_UNION YU_U_RECV{ };
+    YU_U_SEND.DATA.TAIL[2] = 0x80;
+    YU_U_SEND.DATA.TAIL[3] = 0x7f;
+
+    struct sockaddr_in YU_U_SERVER_ADDR { }, YU_U_CLIENT_ADDR{ };
+    socklen_t YU_U_CLIENT_ADDR_LEN = sizeof (YU_U_CLIENT_ADDR);
+    struct ifaddrs *IFADDRS;
+    char IPSTR[INET_ADDRSTRLEN];
+
+    int YU_U_SOCKET_FD = socket(AF_INET, SOCK_DGRAM, 0);
+    if (YU_U_SOCKET_FD == -1)
+    {
+        printf("SOCKET FD ERROR!\n");
+        exit(1);
+    }
+
+    // 设置为非阻塞模式
+    int FLAGS = fcntl(YU_U_SOCKET_FD,F_GETFL,0);
+    if (fcntl(YU_U_SOCKET_FD,F_SETFL,FLAGS | O_NONBLOCK) == -1)
+    {
+        perror("fcntl error\n");
+        exit(-1);
+    }
+
+    memset(&YU_U_SERVER_ADDR, 0, sizeof (YU_U_SERVER_ADDR));
+    YU_U_SERVER_ADDR.sin_family = AF_INET;
+    YU_U_SERVER_ADDR.sin_port = htons(12345);
+    YU_U_SERVER_ADDR.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if (bind(YU_U_SOCKET_FD, (sockaddr *)&YU_U_SERVER_ADDR, (socklen_t)sizeof (YU_U_SERVER_ADDR)) < 0)
+    {
+        perror("bind error!\n");
+        exit(-1);
+    }
+
+    if (getifaddrs(&IFADDRS) == -1)
+    {
+        perror("ip 获取 error!\n");
+        exit(-1);
+    }
+
+    struct ifaddrs *ifa;
+    for (ifa = IFADDRS; ifa != nullptr; ifa = ifa->ifa_next)
+    {
+        if (ifa->ifa_addr == nullptr || ifa->ifa_addr->sa_family != AF_INET)
+            continue;
+        if (ifa->ifa_addr->sa_family == AF_INET)
+        {
+            auto *IPV4 = (struct sockaddr_in *)ifa->ifa_addr;
+            inet_ntop(AF_INET, &IPV4->sin_addr, IPSTR, (socklen_t)sizeof (IPSTR));
+            printf("Interface: %s\t Address: %s\n", ifa->ifa_name, IPSTR);
+        }
+    }
+
+    while (true)
+    {
+        if (recvfrom(YU_U_SOCKET_FD,&YU_U_RECV,sizeof (YU_U_RECV), 0, (struct sockaddr *)&YU_U_CLIENT_ADDR, &YU_U_CLIENT_ADDR_LEN) > 0)
+        {
+
+        }
     }
 }

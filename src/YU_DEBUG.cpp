@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <string>
 
+#ifdef YU_D_DEBUG
 // DEBUG 变量
 struct YU_TYPEDEF_DEBUG YU_V_DEBUG[10]{ };
 
@@ -76,7 +77,7 @@ void YU_F_DEBUG_THREAD()
     char IPSTR[INET_ADDRSTRLEN];
 
     // UDP地址结构
-    struct sockaddr_in YU_U_SERVER_ADDR{},YU_U_CLIENT_ADDR;
+    struct sockaddr_in YU_U_SERVER_ADDR{ },YU_U_CLIENT_ADDR{ };
     socklen_t YU_U_CLIENT_ADDR_LEN = sizeof (YU_U_CLIENT_ADDR);
 
     // UDP发送共用体
@@ -192,3 +193,5 @@ void YU_F_DEBUG_THREAD()
 
 
 }
+
+#endif

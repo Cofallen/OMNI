@@ -6,6 +6,28 @@
 #define DEMO_YU_THREAD_H
 
 #include "YU_UART.h"
+#include "YU_MOTOR.h"
+
+// 数据包
+typedef union YU_TYPEDEF_SEND_UNION
+{
+    struct
+    {
+        YU_TYPEDEF_MOTOR YU_V_MOTOR_DEBUG;
+        char TAIL[4];
+    } DATA;
+    char ALL[160];
+};
+typedef union YU_TYPEDEF_RECV_UNION
+{
+    struct
+    {
+        float PARAM[5];
+        char NAME;
+    } DATA;
+    unsigned long ALL;
+};
+
 
 extern YU_TYPEDEF_DBUS YU_V_DBUS;
 extern YU_TYPEDEF_MONITOR_DBUS YU_V_MONITOR_DBUS;

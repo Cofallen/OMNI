@@ -1,7 +1,7 @@
 //
 // Created by 17273 on 2024/1/15.
 //
-
+#ifdef YU_D_DEBUG
 #ifndef DEMO_YU_DEBUG_HS
 #define DEMO_YU_DEBUG_H
 
@@ -33,3 +33,5 @@ void YU_F_DEBUG_THREAD();
 
 
 #endif //DEMO_YU_DEBUG_H
+
+#endif
