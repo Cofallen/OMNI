@@ -8,7 +8,7 @@
 #include "YU_UART.h"
 #include "YU_MOTOR.h"
 
-// 数据包
+// VOFA 数据包
 typedef union YU_TYPEDEF_SEND_UNION
 {
     struct
@@ -16,7 +16,7 @@ typedef union YU_TYPEDEF_SEND_UNION
         YU_TYPEDEF_MOTOR YU_V_MOTOR_DEBUG;
         char TAIL[4];
     } DATA;
-    char ALL[160];
+    char ALL[184];
 };
 typedef union YU_TYPEDEF_RECV_UNION
 {
@@ -25,7 +25,7 @@ typedef union YU_TYPEDEF_RECV_UNION
         float PARAM[5];
         char NAME;
     } DATA;
-    unsigned long ALL;
+    char ALL[24];
 };
 
 

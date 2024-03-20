@@ -191,9 +191,16 @@ YU_TYPEDEF_MONITOR_DBUS YU_V_MONITOR_DBUS;
 
     while (true)
     {
-        if (recvfrom(YU_U_SOCKET_FD,&YU_U_RECV,sizeof (YU_U_RECV), 0, (struct sockaddr *)&YU_U_CLIENT_ADDR, &YU_U_CLIENT_ADDR_LEN) > 0)
+        if (recvfrom(YU_U_SOCKET_FD,&YU_U_RECV,sizeof (YU_U_RECV.ALL), 0, (struct sockaddr *)&YU_U_CLIENT_ADDR, &YU_U_CLIENT_ADDR_LEN) > 0)
         {
+            printf("RECV SUCCESS!\nALL_LIT:%f",YU_U_RECV.DATA.PARAM[4]);
+
+            // 传参，传给电机
 
         }
+
+        sendto(YU_U_SOCKET_FD, &YU_U_SEND, sizeof (YU_U_SEND.ALL), 0, (struct sockaddr *)&YU_U_CLIENT_ADDR, YU_U_CLIENT_ADDR_LEN);
+
+        usleep(1);
     }
 }
