@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <string>
 
+//#define YU_D_DEBUG 1
+
 #ifdef YU_D_DEBUG
 // DEBUG 变量
 struct YU_TYPEDEF_DEBUG YU_V_DEBUG[10]{ };

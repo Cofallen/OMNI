@@ -118,4 +118,17 @@
 
 /**                       模式                           **/
 
+
+/**                        VOFA NAME                      **/
+#define YU_D_VOFA_CHASSIS_1 '0'
+#define YU_D_VOFA_CHASSIS_2 '1'
+#define YU_D_VOFA_CHASSIS_3 '2'
+#define YU_D_VOFA_CHASSIS_4 '3'
+
+#define YU_D_VOFA_GIMBAL_YAW '5'
+#define YU_D_VOFA_GIMBAL_PIT '6'
+
+/**                         VOFA NAME                      **/
+
+
 #endif //DEMO_YU_DEFINE_H
