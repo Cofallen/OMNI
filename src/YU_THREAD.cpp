@@ -170,7 +170,7 @@ YU_TYPEDEF_DEBUG YU_V_DEBUG[10]{ };
     YU_U_SERVER_ADDR.sin_family = AF_INET;
     YU_U_SERVER_ADDR.sin_port = htons(12345);
     YU_U_SERVER_ADDR.sin_addr.s_addr = htonl(INADDR_ANY);
-
+//    YU_U_SERVER_ADDR.sin_addr.s_addr = htonl(inet_addr("192.168.28.76"));
     if (bind(YU_U_SOCKET_FD, (sockaddr *)&YU_U_SERVER_ADDR, (socklen_t)sizeof (YU_U_SERVER_ADDR)) < 0)
     {
         perror("bind error!\n");
@@ -196,26 +196,33 @@ YU_TYPEDEF_DEBUG YU_V_DEBUG[10]{ };
         }
     }
 
-    int8_t MOTOR_TYPE = 0;
+    int8_t MOTOR_TYPE = 1;
 
     while (true)
     {
+        YU_F_VOFA_DEBUG();
+
         if (recvfrom(YU_U_SOCKET_FD,&YU_U_RECV,sizeof (YU_U_RECV.ALL), 0, (struct sockaddr *)&YU_U_CLIENT_ADDR, &YU_U_CLIENT_ADDR_LEN) > 0)
         {
-            printf("RECV SUCCESS!\nALL_LIT:%s\n",YU_U_RECV.ALL);
             char CLIENT_IP[INET_ADDRSTRLEN];
             inet_ntop(AF_INET, &YU_U_CLIENT_ADDR.sin_addr, CLIENT_IP, INET_ADDRSTRLEN);
 
             YU_F_VOFA_PARSE(&YU_U_RECV);
 
-            MOTOR_TYPE = (int8_t)(YU_U_RECV.DATA.NAME);
-            YU_F_VOFA_DEBUG();
+            YU_F_VOFA_ASSIGN(&YU_U_RECV);
+
+//            MOTOR_TYPE = (int8_t)(YU_U_RECV.DATA.NAME);
 
         }
 
         memcpy(&YU_U_SEND.DATA.YU_V_MOTOR_DEBUG, &YU_V_DEBUG[MOTOR_TYPE],sizeof (YU_V_DEBUG[MOTOR_TYPE]));
 
-        sendto(YU_U_SOCKET_FD, &YU_U_SEND, sizeof (YU_U_SEND.ALL), 0, (struct sockaddr *)&YU_U_CLIENT_ADDR, YU_U_CLIENT_ADDR_LEN);
+        if (sendto(YU_U_SOCKET_FD, &YU_U_SEND, sizeof (YU_U_SEND.ALL), 0, (struct sockaddr *)&YU_U_CLIENT_ADDR, YU_U_CLIENT_ADDR_LEN) > 0)
+        {
+//            printf("ANGLE: %f\n",YU_U_SEND.DATA.YU_V_MOTOR_DEBUG.MOTOR_DATA.ANGLE);
+//            printf("KP: %f\n",YU_U_SEND.DATA.YU_V_MOTOR_DEBUG.PID_S.IN.KP);
+            printf("MOTOR_DATA ANGLE:  %hd\n", YU_V_MOTOR_CHASSIS[0].DATA.ANGLE_NOW);
+        }
 
         usleep(1);
     }
@@ -227,15 +234,12 @@ void YU_F_VOFA_PARSE(YU_TYPEDEF_RECV_UNION *RECV)
     auto POS = ITER.find(':');  // 0x3A
     auto NAME_RAW= ITER.substr(0, POS);
     auto VALUE_RAW = ITER.substr(POS + 1);
-    auto NAME = std::stoi(NAME_RAW);
     auto PARAM = std::stof(VALUE_RAW);
 
-    printf("\n** NAME RAW: %s\n",NAME_RAW.c_str());
-
-    RECV->DATA.NAME = std::stoi(NAME_RAW);
+    strcpy(RECV->DATA.NAME,NAME_RAW.c_str());
     RECV->DATA.PARAM = PARAM;
 
-//    printf("PARSE:\nNAME = %d  PARAM = %f",RECV->DATA.NAME, RECV->DATA.PARAM);
+    printf("NAME = %s  PARAM = %f\n",RECV->DATA.NAME, RECV->DATA.PARAM);
 
 }
 
@@ -305,4 +309,17 @@ void YU_F_VOFA_DEBUG()
     YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[5], &YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW]);
     YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[6], &YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_PIT]);
 
+}
+
+void YU_F_VOFA_ASSIGN(YU_TYPEDEF_RECV_UNION *RECV)
+{
+    std::string OUTLINE = RECV->DATA.NAME;
+    auto POS_1 = OUTLINE.find('_');             // HEAD_MIDDLE_TAIL
+    auto HEAD = OUTLINE.substr(0, POS_1);  // HEAD_MIX
+    auto MIX = OUTLINE.substr(POS_1+1);
+    auto POS_2 = MIX.find('_');
+    auto MIDDLE = MIX.substr(0, POS_2);
+    auto TAIL = MIX.substr(POS_2+1);
+
+    printf("%s %s %s",HEAD.c_str(),MIDDLE.c_str(),TAIL.c_str());
 }

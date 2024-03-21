@@ -46,7 +46,7 @@ typedef union
 {
     struct
     {
-        int8_t NAME;
+        char NAME[12];
         float PARAM;
     } DATA;
     char ALL[16];
@@ -74,6 +74,6 @@ extern YU_TYPEDEF_DEBUG YU_V_DEBUG[10];
 void YU_F_VOFA_PARSE(YU_TYPEDEF_RECV_UNION *RECV);
 void YU_F_VOFA_DEBUG_CAL(YU_TYPEDEF_DEBUG *DEBUG, YU_TYPEDEF_MOTOR *MOTOR);
 void YU_F_VOFA_DEBUG();
-
+void YU_F_VOFA_ASSIGN(YU_TYPEDEF_RECV_UNION *RECV);
 
 #endif //DEMO_YU_THREAD_H
