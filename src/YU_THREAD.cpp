@@ -20,6 +20,7 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <ifaddrs.h>
+#include <unordered_map>
 
 //#define YU_DEBUG_CHASSIS 1
 
@@ -38,6 +39,7 @@ YU_TYPEDEF_MOTOR YU_V_MOTOR_GIMBAL[2] = {0};
 YU_TYPEDEF_TOP YU_V_TOP_DATA_GIMBAL{ };
 
 YU_TYPEDEF_DEBUG YU_V_DEBUG[10]{ };
+int8_t MOTOR_TYPE = 9;
 
 /**                    全局变量定义                    **/
 
@@ -196,7 +198,7 @@ YU_TYPEDEF_DEBUG YU_V_DEBUG[10]{ };
         }
     }
 
-    int8_t MOTOR_TYPE = 1;
+
 
     while (true)
     {
@@ -221,7 +223,7 @@ YU_TYPEDEF_DEBUG YU_V_DEBUG[10]{ };
         {
 //            printf("ANGLE: %f\n",YU_U_SEND.DATA.YU_V_MOTOR_DEBUG.MOTOR_DATA.ANGLE);
 //            printf("KP: %f\n",YU_U_SEND.DATA.YU_V_MOTOR_DEBUG.PID_S.IN.KP);
-            printf("MOTOR_DATA ANGLE:  %hd\n", YU_V_MOTOR_CHASSIS[0].DATA.ANGLE_NOW);
+//            printf("MOTOR_DATA ANGLE:  %hd\n", YU_V_MOTOR_CHASSIS[0].DATA.ANGLE_NOW);
         }
 
         usleep(1);
@@ -239,7 +241,7 @@ void YU_F_VOFA_PARSE(YU_TYPEDEF_RECV_UNION *RECV)
     strcpy(RECV->DATA.NAME,NAME_RAW.c_str());
     RECV->DATA.PARAM = PARAM;
 
-    printf("NAME = %s  PARAM = %f\n",RECV->DATA.NAME, RECV->DATA.PARAM);
+//    printf("NAME = %s  PARAM = %f\n",RECV->DATA.NAME, RECV->DATA.PARAM);
 
 }
 
@@ -301,25 +303,45 @@ void YU_F_VOFA_DEBUG_CAL(YU_TYPEDEF_DEBUG *DEBUG, YU_TYPEDEF_MOTOR *MOTOR)
 
 void YU_F_VOFA_DEBUG()
 {
-    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[0], &YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_1]);
-    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[1], &YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_2]);
-    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[2], &YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_3]);
-    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[3], &YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_4]);
+    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[YU_D_VOFA_C1], &YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_1]);
+    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[YU_D_VOFA_C2], &YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_2]);
+    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[YU_D_VOFA_C3], &YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_3]);
+    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[YU_D_VOFA_C4], &YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_4]);
 
-    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[5], &YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW]);
-    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[6], &YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_PIT]);
+    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[YU_D_VOFA_GY], &YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW]);
+    YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[YU_D_VOFA_GP], &YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_PIT]);
 
 }
 
 void YU_F_VOFA_ASSIGN(YU_TYPEDEF_RECV_UNION *RECV)
 {
     std::string OUTLINE = RECV->DATA.NAME;
-    auto POS_1 = OUTLINE.find('_');             // HEAD_MIDDLE_TAIL
-    auto HEAD = OUTLINE.substr(0, POS_1);  // HEAD_MIX
-    auto MIX = OUTLINE.substr(POS_1+1);
-    auto POS_2 = MIX.find('_');
-    auto MIDDLE = MIX.substr(0, POS_2);
-    auto TAIL = MIX.substr(POS_2+1);
+    auto POS_1 = OUTLINE.find('_');             // HEAD_TAIL
+    auto HEAD = OUTLINE.substr(0, POS_1);  //   C1_S_P
+    auto TAIL = OUTLINE.substr(POS_1+1);
 
-    printf("%s %s %s",HEAD.c_str(),MIDDLE.c_str(),TAIL.c_str());
+    // C1 C2 C3 C4 GY GP  // A S C  // P I D LIT
+    static const std::unordered_map<std::string, int> MOTOR_MAP{
+            {"C1", YU_D_VOFA_C1},
+            {"C2", YU_D_VOFA_C2},
+            {"C3", YU_D_VOFA_C3},
+            {"C4", YU_D_VOFA_C4},
+            {"GY", YU_D_VOFA_GY},
+            {"GP", YU_D_VOFA_GP}
+    };
+    auto IT = MOTOR_MAP.find(HEAD);
+    if (IT != MOTOR_MAP.end())
+    {
+        MOTOR_TYPE = IT->second;
+    }
+
+    printf("MOTOR_TYPE:  %d\n",MOTOR_TYPE);
+
+//    static const std::unordered_map<std::string, >
+//
+}
+
+void YU_F_VOFA_WRITE(YU_TYPEDEF_MOTOR *MOTOR, float PARAM)
+{
+//    static void
 }
