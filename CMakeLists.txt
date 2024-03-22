@@ -39,6 +39,8 @@ add_executable(demo ${SOURCES}
         inc/YU_THREAD.h
         src/YU_GIMBAL.cpp
         inc/YU_GIMBAL.h
+        src/YU_VOFA.cpp
+        inc/YU_VOFA.h
 )
 
 target_link_libraries(demo pthread)
