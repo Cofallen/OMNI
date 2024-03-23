@@ -47,7 +47,7 @@ int8_t MOTOR_TYPE = 9;
 
 [[noreturn]] void YU_F_THREAD_CHASSIS_MECANUM()
 {
-    const float YU_V_PID_CHASSIS[5] = {5,0.1,0,1000,3000};
+    const float YU_V_PID_CHASSIS[5] = {5,0,0,1000,1500};
 
 
     YU_T_PID_INIT(&YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_1].PID_S,YU_V_PID_CHASSIS);
@@ -117,10 +117,10 @@ int8_t MOTOR_TYPE = 9;
 
 [[noreturn]] void YU_F_THREAD_GIMBAL()
 {
-    const float PID_GIMBAL_YAW_A[5] = {2.0f, 0, 0, 1000, 3000};
-    const float PID_GIMBAL_YAW_S[5] = {2.0f, 0, 0, 1000, 3000};
-    const float PID_GIMBAL_PIT_A[5] = {2.0f, 0, 0, 1000, 3000};
-    const float PID_GIMBAL_PIT_S[5] = {2.0f, 0, 0, 1000, 3000};
+    const float PID_GIMBAL_YAW_A[5] = {2.0f, 0, 0, 1000, 2000};
+    const float PID_GIMBAL_YAW_S[5] = {2.0f, 0, 0, 1000, 2000};
+    const float PID_GIMBAL_PIT_A[5] = {2.0f, 0, 0, 1000, 2000};
+    const float PID_GIMBAL_PIT_S[5] = {2.0f, 0, 0, 1000, 2000};
 
 
     YU_T_PID_INIT(&YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].PID_S, PID_GIMBAL_YAW_S);
