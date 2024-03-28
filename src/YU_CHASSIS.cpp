@@ -77,7 +77,7 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS, int MOD)
     float REMOTE[4] = {0};                        // 用来做限幅，不破坏遥控起原数据
     REMOTE[0] = (float)DBUS->REMOTE.CH0_int16  * 0.1f;    // vy
     REMOTE[1] = (float)DBUS->REMOTE.CH1_int16  * 0.1f;    // vx
-    REMOTE[2] = (float)DBUS->REMOTE.CH2_int16 * 0.1f;    // vr
+    REMOTE[2] = (float)DBUS->REMOTE.CH2_int16  * 0.1f;    // vr
     REMOTE[3] = (float)DBUS->REMOTE.CH3_int16  * 0.1f;    //
 
     float VX=0, VY=0, VR=0; double ANGLE_RELATIVE = 0;  // 得到vx,vy,vr,angle
@@ -87,16 +87,25 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS, int MOD)
     // 底盘跟随模式
     if (MOD == YU_D_MOD_CHASSIS_TRACE)
     {
-        float angleSin = 0, angleCos = 0;
-        ANGLE_RELATIVE = (double)YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW * 2 * 3.14159f / 8192.0;
-        if (ANGLE_RELATIVE > 3.14159f)  ANGLE_RELATIVE -= 3.14159f;
+        static bool STR = false;         // 排除DATA.ANGLE_LAST 一开始为0  TODO: 有点丑陋,以后不加缩进
+        if (YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_LAST == 0) STR = true;
 
-        //得到相对角度的sin，cos
-        angleSin = sin(ANGLE_RELATIVE);
-        angleCos = cos(ANGLE_RELATIVE);
-        //得到转化后的vx,vy,vr
-        VX = -VX * angleSin + VY * angleCos;
-        VY =  VX * angleCos + VY * angleSin;
+        if (!STR)  // STR == false
+        {
+            float angleSin = 0, angleCos = 0;
+            ANGLE_RELATIVE = (double)YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW * 2 * 3.14159f / 8192.0;
+            ANGLE_RELATIVE = (double)(YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW - YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_LAST) * 2 * 3.14159f / 8192.0;
+            if (ANGLE_RELATIVE > 3.14159f)  ANGLE_RELATIVE -= 3.14159f;   // [-pi, pi]
+            else if (ANGLE_RELATIVE < -3.14159f)  ANGLE_RELATIVE = 0.0f;  // 过0处理
+
+            //得到相对角度的sin，cos
+            angleSin = sin(ANGLE_RELATIVE);
+            angleCos = cos(ANGLE_RELATIVE);
+            //得到转化后的vx,vy,vr
+            VX = -VY * angleSin + VX * angleCos;
+            VY =  VY * angleCos + VX * angleSin;
+        }
+
     }
 
     VX = YU_D_MATH_LIMIT(MecanumData.Max_vx_Speed, -MecanumData.Max_vx_Speed, VX);

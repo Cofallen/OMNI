@@ -79,7 +79,7 @@ void YU_F_MOTOR_CAN_CAL(YU_TYPEDEF_MOTOR *MOTOR,const uint8_t *CAN_DATA,uint8_t 
                 MOTOR->DATA.LAPS--;
             }
 
-            MOTOR->DATA.ANGLE_INFINITE = MOTOR->DATA.LAPS * 8192 + MOTOR->DATA.ANGLE_NOW;
+            MOTOR->DATA.ANGLE_INFINITE = (int32_t) ((MOTOR->DATA.LAPS << 13) + MOTOR->DATA.ANGLE_NOW);
 
         }
             break;
