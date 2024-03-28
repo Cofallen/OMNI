@@ -115,6 +115,7 @@
 /**                      模式                            **/
 #define YU_D_MOD_CHASSIS 0
 #define YU_D_MOD_GIMBAL 1
+#define YU_D_MOD_CHASSIS_TRACE 2
 
 /**                       模式                           **/
 

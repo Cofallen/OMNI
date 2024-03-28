@@ -8,6 +8,7 @@
 #include "YU_MATH.h"
 #include "YU_CAN.h"
 #include "YU_DEFINE.h"
+#include "YU_THREAD.h"
 
 #include <cmath>
 
@@ -74,19 +75,38 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS, int MOD)
     if (MOD == YU_D_MOD_GIMBAL) return;
     // 将遥控器摇杆数据保存，便于使用
     float REMOTE[4] = {0};                        // 用来做限幅，不破坏遥控起原数据
-    REMOTE[1] = (float)DBUS->REMOTE.CH0_int16  * 0.1f;
-    REMOTE[0] = (float)DBUS->REMOTE.CH1_int16  * 0.1f;
-    REMOTE[2] = -(float)DBUS->REMOTE.CH2_int16 * 0.1f;
-    REMOTE[3] = (float)DBUS->REMOTE.CH3_int16  * 0.1f;    // 算追踪的， 先不写
+    REMOTE[0] = (float)DBUS->REMOTE.CH0_int16  * 0.1f;    // vy
+    REMOTE[1] = (float)DBUS->REMOTE.CH1_int16  * 0.1f;    // vx
+    REMOTE[2] = (float)DBUS->REMOTE.CH2_int16 * 0.1f;    // vr
+    REMOTE[3] = (float)DBUS->REMOTE.CH3_int16  * 0.1f;    //
 
-    REMOTE[0] = YU_D_MATH_LIMIT(MecanumData.Max_vx_Speed, -MecanumData.Max_vx_Speed, REMOTE[0]);
-    REMOTE[1] = YU_D_MATH_LIMIT(MecanumData.Max_vy_Speed, -MecanumData.Max_vy_Speed, REMOTE[1]);
-    REMOTE[2] = YU_D_MATH_LIMIT(MecanumData.Max_vr_Speed, -MecanumData.Max_vr_Speed, REMOTE[2]);
+    float VX=0, VY=0, VR=0; double ANGLE_RELATIVE = 0;  // 得到vx,vy,vr,angle
+    VX = REMOTE[1];  VY = REMOTE[0];
+    VR = -REMOTE[2];
 
-    MecanumData.Mecanum_Out[0] = ( REMOTE[0] + REMOTE[1] - REMOTE[2] * MecanumData.Raid_FL) * MecanumData.Wheel_rpm_ratio;
-    MecanumData.Mecanum_Out[1] = (-REMOTE[0] + REMOTE[1] - REMOTE[2] * MecanumData.Raid_FR) * MecanumData.Wheel_rpm_ratio;
-    MecanumData.Mecanum_Out[2] = (-REMOTE[0] - REMOTE[1] - REMOTE[2] * MecanumData.Raid_BR) * MecanumData.Wheel_rpm_ratio;
-    MecanumData.Mecanum_Out[3] = ( REMOTE[0] - REMOTE[1] - REMOTE[2] * MecanumData.Raid_BL) * MecanumData.Wheel_rpm_ratio;
+    // 底盘跟随模式
+    if (MOD == YU_D_MOD_CHASSIS_TRACE)
+    {
+        float angleSin = 0, angleCos = 0;
+        ANGLE_RELATIVE = (double)YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW * 2 * 3.14159f / 8192.0;
+        if (ANGLE_RELATIVE > 3.14159f)  ANGLE_RELATIVE -= 3.14159f;
+
+        //得到相对角度的sin，cos
+        angleSin = sin(ANGLE_RELATIVE);
+        angleCos = cos(ANGLE_RELATIVE);
+        //得到转化后的vx,vy,vr
+        VX = -VX * angleSin + VY * angleCos;
+        VY =  VX * angleCos + VY * angleSin;
+    }
+
+    VX = YU_D_MATH_LIMIT(MecanumData.Max_vx_Speed, -MecanumData.Max_vx_Speed, VX);
+    VY = YU_D_MATH_LIMIT(MecanumData.Max_vy_Speed, -MecanumData.Max_vy_Speed, VY);
+    VR = YU_D_MATH_LIMIT(MecanumData.Max_vr_Speed, -MecanumData.Max_vr_Speed, VR);
+
+    MecanumData.Mecanum_Out[0] = ( VX + VY - VR * MecanumData.Raid_FL) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[1] = (-VX + VY - VR * MecanumData.Raid_FR) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[2] = (-VX - VY - VR * MecanumData.Raid_BR) * MecanumData.Wheel_rpm_ratio;
+    MecanumData.Mecanum_Out[3] = ( VX - VY - VR * MecanumData.Raid_BL) * MecanumData.Wheel_rpm_ratio;
 
 //    printf("MOTOR1:  %f  MOTOR2:  %f  MOTOR3:  %f  MOTOR4:  %f\n",
 //           MecanumData.Mecanum_Out[0],
