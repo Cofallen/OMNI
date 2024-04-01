@@ -55,13 +55,11 @@ typedef struct Mecanum_Typedef
 
 float *YU_F_CALCULATE_WHEELPOWERS(const float TURNFAACTOR);
 
-extern float MECANUM_TARGET[4];
 extern struct Chassis_Typedef ChassisData;
 extern struct Mecanum_Typedef MecanumData;
 
-
 void YU_F_CHASSIS_INIT();
-void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS, int MOD);
-void YU_F_CHASSIS_MECANUM_SEND(YU_TYPEDEF_MOTOR *MOTOR);
+void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MOD);
+void YU_F_CHASSIS_MECANUM_CAL(YU_TYPEDEF_MOTOR *MOTOR);
 
 #endif //DEMO_YU_CHASSIS_H

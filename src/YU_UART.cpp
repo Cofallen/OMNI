@@ -51,21 +51,18 @@
         perror("WRONG UART OPEN\n");
         exit(-1);
     }
-
-    // 阁下功力为何如此之强，待我闭关修炼，再说弄懂
-    // 这一块没弄懂，先等我把地盘先写完，再回来搞你
-    OPTIONS.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
-    OPTIONS.c_iflag |= (INPCK | IGNPAR);
-    OPTIONS.c_oflag &= ~OPOST;
-    OPTIONS.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-    OPTIONS.c_cflag &= ~(CSIZE | CRTSCTS | PARODD | CBAUD);
-    OPTIONS.c_cflag |= (CS8 | CSTOPB | CLOCAL | PARENB | BOTHER | CREAD);
-    OPTIONS.c_ispeed = 100000;
-    OPTIONS.c_ospeed = 100000;
-    OPTIONS.c_cc[VMIN] = 25;
-    OPTIONS.c_cc[VTIME] = 0;
-    //TCSETS2 和 struct termios2 非标准波特率
-    //TCSETS  和 struct termios    标准波特率
+        OPTIONS.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+        OPTIONS.c_iflag |= (INPCK | IGNPAR);
+        OPTIONS.c_oflag &= ~OPOST;
+        OPTIONS.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+        OPTIONS.c_cflag &= ~(CSIZE | CRTSCTS | PARODD | CBAUD);
+        OPTIONS.c_cflag |= (CS8 | CSTOPB | CLOCAL | PARENB | BOTHER | CREAD);
+        OPTIONS.c_ispeed = 100000;
+        OPTIONS.c_ospeed = 100000;
+        OPTIONS.c_cc[VMIN] = 25;
+        OPTIONS.c_cc[VTIME] = 0;
+        //TCSETS2 和 struct termios2 非标准波特率
+        //TCSETS  和 struct termios    标准波特率
 
     if (0 != ioctl(UART_FD, TCSETS2, &OPTIONS)) {
         close(UART_FD);
@@ -102,9 +99,12 @@
     while (true)
     {
         usleep(1);
-        auto DATA_FLAG = (int8_t) read(UART_FD, YU_V_DBUS_UNION.GET_DATA,sizeof (YU_V_DBUS_UNION.GET_DATA));
+        auto DATA_FLAG =  read(UART_FD, YU_V_DBUS_UNION.GET_DATA,sizeof (YU_V_DBUS_UNION.GET_DATA));
 
-        if (DATA_FLAG > 0)
+//        if (DATA_FLAG > 0)
+//            printf("DATA FLAG: %ld\n",DATA_FLAG);
+
+        if (DATA_FLAG == 12)
         {
 
             YU_V_DBUS->REMOTE.S1_u8 = YU_V_DBUS_UNION.DATA_NEATEN.S1;
@@ -129,9 +129,12 @@
 
 
 //        printf("收到遥控器数据\n");
-//        printf("ch0=  %8d  ch1=  %8d  ch2=  %8d  ch3=  %8d\n",
-//               YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
-//               YU_V_DBUS->REMOTE.CH2_int16, YU_V_DBUS->REMOTE.CH3_int16);
+        if (YU_V_DBUS->REMOTE.CH0_int16 != 0 || YU_V_DBUS->REMOTE.CH1_int16 != 0 || YU_V_DBUS->REMOTE.CH2_int16 != 0 || YU_V_DBUS->REMOTE.CH3_int16 != 0)
+        {
+            printf("ch0=  %8d  ch1=  %8d  ch2=  %8d  ch3=  %8d\n",
+                   YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
+                   YU_V_DBUS->REMOTE.CH2_int16, YU_V_DBUS->REMOTE.CH3_int16);
+        }
 
 //        memset(YU_V_DBUS, 0, sizeof (*YU_V_DBUS));
 

@@ -23,6 +23,8 @@ struct YU_TYPEDEF_MOTOR_DATA
     float AIM;
     float AIM_LAST;
 
+    int16_t CAN_SEND;     //CAN发送数据
+
     int16_t TEMP;
 
     int ANGLE_INIT;       //云台初始角度

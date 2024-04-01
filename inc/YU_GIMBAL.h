@@ -8,11 +8,8 @@
 #include "YU_UART.h"
 #include "YU_MOTOR.h"
 
-extern float GIMBAL_OUT[2];
-extern float GIMBAL_TARGET[2];
 
-void YU_F_GIMBAL(YU_TYPEDEF_DBUS *DBUS, int MOD);
-void YU_F_GIMBAL_SEND(YU_TYPEDEF_MOTOR *MOTOR);
+void YU_F_GIMBAL(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MOD);
 
 
 #endif //DEMO_YU_GIMBAL_H

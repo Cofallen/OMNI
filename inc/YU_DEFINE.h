@@ -64,8 +64,8 @@
 //陀螺仪
 #define YU_D_CAN_ID_TOP         0x101
 //云台
-#define YU_D_CAN_ID_YAW         0x205
-#define YU_D_CAN_ID_PIT         0x208
+#define YU_D_CAN_ID_YAW         0x20B
+#define YU_D_CAN_ID_PIT         0x209
 //发射
 #define YU_D_CAN_ID_ATTACK_L    0x203
 #define YU_D_CAN_ID_ATTACK_R    0x204

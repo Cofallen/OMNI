@@ -15,7 +15,6 @@
 // 数据
 Chassis_Typedef ChassisData;
 Mecanum_Typedef MecanumData;
-float MECANUM_TARGET[4] = {0};
 
 /**
  * @brief 地盘功率分配
@@ -70,19 +69,15 @@ void YU_F_CHASSIS_INIT()
  * @details 解算，将遥控数据转化成电机目标值
  * @param DBUS
  */
-void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS, int MOD)
+void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MOD)
 {
     if (MOD == YU_D_MOD_GIMBAL) return;
-    // 将遥控器摇杆数据保存，便于使用
-    float REMOTE[4] = {0};                        // 用来做限幅，不破坏遥控起原数据
-    REMOTE[0] = (float)DBUS->REMOTE.CH0_int16  * 0.1f;    // vy
-    REMOTE[1] = (float)DBUS->REMOTE.CH1_int16  * 0.1f;    // vx
-    REMOTE[2] = (float)DBUS->REMOTE.CH2_int16  * 0.1f;    // vr
-    REMOTE[3] = (float)DBUS->REMOTE.CH3_int16  * 0.1f;    //
 
-    float VX=0, VY=0, VR=0; double ANGLE_RELATIVE = 0;  // 得到vx,vy,vr,angle
-    VX = REMOTE[1];  VY = REMOTE[0];
-    VR = -REMOTE[2];
+    float VX=0.0f, VY=0.0f, VR=0.0f;
+    double ANGLE_RELATIVE = 0.0f;       // 得到vx,vy,vr,angle
+    VX =  (float)DBUS->REMOTE.CH1_int16;
+    VY =  (float)DBUS->REMOTE.CH0_int16;
+    VR = -(float)DBUS->REMOTE.CH2_int16;
 
     // 底盘跟随模式
     if (MOD == YU_D_MOD_CHASSIS_TRACE)
@@ -92,15 +87,15 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS, int MOD)
 
         if (!STR)  // STR == false
         {
-            float angleSin = 0, angleCos = 0;
+//            float angleSin = 0, angleCos = 0;
             ANGLE_RELATIVE = (double)YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW * 2 * 3.14159f / 8192.0;
             ANGLE_RELATIVE = (double)(YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW - YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_LAST) * 2 * 3.14159f / 8192.0;
             if (ANGLE_RELATIVE > 3.14159f)  ANGLE_RELATIVE -= 3.14159f;   // [-pi, pi]
             else if (ANGLE_RELATIVE < -3.14159f)  ANGLE_RELATIVE = 0.0f;  // 过0处理
 
             //得到相对角度的sin，cos
-            angleSin = sin(ANGLE_RELATIVE);
-            angleCos = cos(ANGLE_RELATIVE);
+            auto angleSin = std::sin(ANGLE_RELATIVE);
+            auto angleCos = std::cos(ANGLE_RELATIVE);
             //得到转化后的vx,vy,vr
             VX = -VY * angleSin + VX * angleCos;
             VY =  VY * angleCos + VX * angleSin;
@@ -145,15 +140,8 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS, int MOD)
     // 接收处理后的目标值数组
     for (int i = 0; i < 4; ++i)
     {
-        MECANUM_TARGET[i] = MecanumData.Mecanum_Out[i];
+       MOTOR[i].DATA.AIM = MecanumData.Mecanum_Out[i];
     }
-
-//    printf("TARGET:  MOTOR1:  %f  MOTOR2:  %f  MOTOR3:  %f  MOTOR4:  %f\n",
-//           MECANUM_TARGET[0],
-//           MECANUM_TARGET[1],
-//           MECANUM_TARGET[2],
-//           MECANUM_TARGET[3]
-//    );
 
 }
 
@@ -161,28 +149,13 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_DBUS *DBUS, int MOD)
  * @details 地盘 CAN 发送
  * @param MOTOR
  */
-void YU_F_CHASSIS_MECANUM_SEND(YU_TYPEDEF_MOTOR *MOTOR)
+void YU_F_CHASSIS_MECANUM_CAL(YU_TYPEDEF_MOTOR *MOTOR)
 {
     // PID 先只写一个速度环
-    int16_t SPEED_SEND[4] = {0};
 
-    MOTOR[YU_D_MOTOR_CHASSIS_1].DATA.AIM = MECANUM_TARGET[0];
-    MOTOR[YU_D_MOTOR_CHASSIS_2].DATA.AIM = MECANUM_TARGET[1];
-    MOTOR[YU_D_MOTOR_CHASSIS_3].DATA.AIM = MECANUM_TARGET[2];
-    MOTOR[YU_D_MOTOR_CHASSIS_4].DATA.AIM = MECANUM_TARGET[3];
-
-    SPEED_SEND[YU_D_MOTOR_CHASSIS_1] = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_1].PID_S, MECANUM_TARGET[0], MOTOR->DATA.SPEED_NOW);
-    SPEED_SEND[YU_D_MOTOR_CHASSIS_2] = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_2].PID_S, MECANUM_TARGET[1], MOTOR->DATA.SPEED_NOW);
-    SPEED_SEND[YU_D_MOTOR_CHASSIS_3] = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_3].PID_S, MECANUM_TARGET[2], MOTOR->DATA.SPEED_NOW);
-    SPEED_SEND[YU_D_MOTOR_CHASSIS_4] = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_4].PID_S, MECANUM_TARGET[3], MOTOR->DATA.SPEED_NOW);
-
-//    printf("SMOTOR1:  %hd  SMOTOR2:  %hd  SMOTOR3:  %hd  SMOTOR4:  %hd\n",
-//           SPEED_SEND[0],
-//           SPEED_SEND[1],
-//           SPEED_SEND[2],
-//           SPEED_SEND[3]
-//    );
-
-//    YU_F_CAN_SEND(0, 0x200, SPEED_SEND[YU_D_MOTOR_CHASSIS_1], SPEED_SEND[YU_D_MOTOR_CHASSIS_2], SPEED_SEND[YU_D_MOTOR_CHASSIS_3], SPEED_SEND[YU_D_MOTOR_CHASSIS_4]);
+    MOTOR[YU_D_MOTOR_CHASSIS_1].DATA.CAN_SEND = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_1].PID_S, MOTOR[YU_D_CAN_ID_CHASSIS_1].DATA.AIM, MOTOR->DATA.SPEED_NOW);
+    MOTOR[YU_D_MOTOR_CHASSIS_2].DATA.CAN_SEND = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_2].PID_S, MOTOR[YU_D_CAN_ID_CHASSIS_2].DATA.AIM, MOTOR->DATA.SPEED_NOW);
+    MOTOR[YU_D_MOTOR_CHASSIS_3].DATA.CAN_SEND = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_3].PID_S, MOTOR[YU_D_CAN_ID_CHASSIS_3].DATA.AIM, MOTOR->DATA.SPEED_NOW);
+    MOTOR[YU_D_MOTOR_CHASSIS_4].DATA.CAN_SEND = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_4].PID_S, MOTOR[YU_D_CAN_ID_CHASSIS_4].DATA.AIM, MOTOR->DATA.SPEED_NOW);
 
 }

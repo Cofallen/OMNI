@@ -119,7 +119,7 @@ bool YU_F_CAN_INIT(void)
  */
 static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DATA,uint8_t can,u_int32_t CAN_ID,uint8_t *CAN_DATA)
 {
-    if (can == YU_D_CAN_2)
+    if (can == YU_D_CAN_1)
     {
 //        printf("CANID%x\n",CAN_ID);
         // 这几个解算也看不懂
@@ -142,7 +142,7 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
         }
     }
 
-    else  // can == 0
+    else  // can == 1
     {
         switch (CAN_ID)
         {
@@ -218,7 +218,6 @@ bool YU_F_CAN_RECV(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DATA,uint8_t
 
 
     write(YU_C_FD[can], &CAN_FRAME, sizeof(struct can_frame)) ;
-
 
     return 1;
 }
