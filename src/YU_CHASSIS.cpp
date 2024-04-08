@@ -74,7 +74,7 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MO
     if (MOD == YU_D_MOD_GIMBAL) return;
 
     float VX=0.0f, VY=0.0f, VR=0.0f;
-    double ANGLE_RELATIVE = 0.0f;       // 得到vx,vy,vr,angle
+    double ANGLE_RELATIVE = 0.0f,ANGLE_RAD = 0.0f;       // 得到vx,vy,vr,angle
     VX =  (float)DBUS->REMOTE.CH1_int16;
     VY =  (float)DBUS->REMOTE.CH0_int16;
     VR = -(float)DBUS->REMOTE.CH2_int16;
@@ -87,15 +87,14 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MO
 
         if (!STR)  // STR == false
         {
-//            float angleSin = 0, angleCos = 0;
-            ANGLE_RELATIVE = (double)YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW * 2 * 3.14159f / 8192.0;
-            ANGLE_RELATIVE = (double)(YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW - YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_LAST) * 2 * 3.14159f / 8192.0;
-            if (ANGLE_RELATIVE > 3.14159f)  ANGLE_RELATIVE -= 3.14159f;   // [-pi, pi]
-            else if (ANGLE_RELATIVE < -3.14159f)  ANGLE_RELATIVE = 0.0f;  // 过0处理
+            ANGLE_RELATIVE = (double)(YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW - YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_LAST);
+            if (ANGLE_RELATIVE > 4096.0f) ANGLE_RELATIVE -= 8192.0f;
+            else if (ANGLE_RELATIVE < -4096.0f) ANGLE_RELATIVE += 8192.0f;
 
+            ANGLE_RAD = ANGLE_RELATIVE * YU_D_RELATIVE_CAL_PARAM;
             //得到相对角度的sin，cos
-            auto angleSin = std::sin(ANGLE_RELATIVE);
-            auto angleCos = std::cos(ANGLE_RELATIVE);
+            auto angleSin = std::sin(ANGLE_RAD);
+            auto angleCos = std::cos(ANGLE_RAD);
             //得到转化后的vx,vy,vr
             VX = -VY * angleSin + VX * angleCos;
             VY =  VY * angleCos + VX * angleSin;

@@ -142,8 +142,8 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
         }
     }
 
-    else  // can == 1
-    {
+//    else   // can == 1
+//    {
         switch (CAN_ID)
         {
             case YU_D_CAN_ID_CHASSIS_1:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_1], CAN_DATA, YU_D_MOTOR_TYPE_3508, YU_D_STATUS_ID_CHASSIS_MOTOR_1);
@@ -157,7 +157,7 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
 
             default:break;
         }
-    }
+//    }
 
     return  true;
 }

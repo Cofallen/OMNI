@@ -6,7 +6,7 @@
       <paths name="Remote Host (34d8911b-8d8e-48b3-8fa4-97135e88d0d7)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/tmp.3rxswWp9QV" local="$PROJECT_DIR$" />
+            <mapping deploy="/root/OMNI" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
@@ -22,7 +22,7 @@
       <paths name="nnx (7c8257a8-f7e1-4e83-a383-5942caab89d6)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/tmp.Bhnqvl9WdS" local="$PROJECT_DIR$" />
+            <mapping deploy="/home/nx/horizon" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
@@ -40,11 +40,13 @@
           <mappings>
             <mapping deploy="/tmp/tmp.qxkjAg51BU" local="$PROJECT_DIR$" />
           </mappings>
-          <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nx" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/release" />
-          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="全全">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
         </serverdata>
       </paths>
     </serverData>

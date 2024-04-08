@@ -131,7 +131,7 @@
 //        printf("收到遥控器数据\n");
         if (YU_V_DBUS->REMOTE.CH0_int16 != 0 || YU_V_DBUS->REMOTE.CH1_int16 != 0 || YU_V_DBUS->REMOTE.CH2_int16 != 0 || YU_V_DBUS->REMOTE.CH3_int16 != 0)
         {
-            printf("ch0=  %8d  ch1=  %8d  ch2=  %8d  ch3=  %8d\n",
+            printf("ch0=  %4d  ch1=  %4d  ch2=  %4d  ch3=  %4d\n",
                    YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
                    YU_V_DBUS->REMOTE.CH2_int16, YU_V_DBUS->REMOTE.CH3_int16);
         }
