@@ -6,6 +6,7 @@
 #include "YU_MOTOR.h"
 #include "YU_DEFINE.h"
 #include "YU_CONFIG.h"
+#include "YU_UART.h"
 
 struct
 {
@@ -27,3 +28,4 @@ bool RUI_F_ATTACK_INIT()
     return true;
 }
 
+//float YU_F_GET_FIRE_WIPE_SPEED(YU_TYPEDEF_DBUS *DBUS, )

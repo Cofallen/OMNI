@@ -59,18 +59,13 @@ int8_t MOTOR_TYPE = 9;
 
     while (true)
     {
+//        if (YU_V_DBUS.REMOTE.S1_u8 == YU_D_MOD_GIMBAL) continue;
+
         usleep(1);
 
         YU_F_CAN_RECV(YU_V_MOTOR_CHASSIS, &YU_V_TOP_DATA_CHASSIS, 0);
-#ifdef YU_DEBUG_CHASSIS
-        printf("AMOTOR1:  %d  AMOTOR2:  %d\nAMOTOR3:  %d  AMOTOR4:  %d\n",
-               YU_V_MOTOR_CHASSIS[0].DATA.ANGLE_NOW,
-               YU_V_MOTOR_CHASSIS[1].DATA.ANGLE_NOW,
-               YU_V_MOTOR_CHASSIS[2].DATA.ANGLE_NOW,
-               YU_V_MOTOR_CHASSIS[3].DATA.ANGLE_NOW
-        );
-#endif
-        YU_F_CHASSIS_MECANUM(YU_V_MOTOR_CHASSIS, &YU_V_DBUS, YU_D_MOD_CHASSIS);
+
+        YU_F_CHASSIS_MECANUM(YU_V_MOTOR_CHASSIS, &YU_V_DBUS, YU_V_DBUS.REMOTE.S1_u8); // S1 == MOD_CHASSIS == 3
         YU_F_CHASSIS_MECANUM_CAL(YU_V_MOTOR_CHASSIS);
 
         YU_F_CAN_SEND(0, 0x200, YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_1].DATA.CAN_SEND, YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_2].DATA.CAN_SEND,
@@ -121,8 +116,8 @@ int8_t MOTOR_TYPE = 9;
 
 [[noreturn]] void YU_F_THREAD_GIMBAL()
 {
-    const float PID_GIMBAL_YAW_A[5] = {20.0f, 0, 5, 1000, 3000};
-    const float PID_GIMBAL_YAW_S[5] = {10.0f, 0, 5, 1000, 1000};
+    const float PID_GIMBAL_YAW_A[5] = {8.1f, 0.0001f, 0, 987, 995};
+    const float PID_GIMBAL_YAW_S[5] = {25.0f, 0, 0, 999, 28000};
     const float PID_GIMBAL_PIT_A[5] = {4.0f, 0.002f, 0, 1962, 1088};
     const float PID_GIMBAL_PIT_S[5] = {10.0f, 0, 0, 1000, 28000};
 
@@ -140,11 +135,13 @@ int8_t MOTOR_TYPE = 9;
 
     while (true)
     {
+//        if(YU_V_DBUS.REMOTE.S1_u8 != YU_D_MOD_GIMBAL) continue;  // 这里要改成遥控的按键接收 // S1 == MOD_GIMBAL == 1
+
         usleep(1);
 
         YU_F_CAN_RECV(YU_V_MOTOR_GIMBAL,&YU_V_TOP_DATA_GIMBAL,0);
 
-        YU_F_GIMBAL(YU_V_MOTOR_GIMBAL, &YU_V_DBUS, YU_D_MOD_GIMBAL); // 这里要改成遥控的按键接收
+        YU_F_GIMBAL(YU_V_MOTOR_GIMBAL, &YU_V_DBUS);
 
         YU_F_CAN_SEND(0,0x2FF, YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_PIT].DATA.CAN_SEND, 0, YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.CAN_SEND, 0);
 

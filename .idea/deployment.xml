@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="Remote Development" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeDeletion="false">
+  <component name="PublishConfigData" serverName="Remote Development" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" confirmBeforeDeletion="false">
     <option name="confirmBeforeDeletion" value="false" />
+    <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="Remote Host (34d8911b-8d8e-48b3-8fa4-97135e88d0d7)">
         <serverdata>
@@ -22,7 +23,7 @@
       <paths name="nnx (7c8257a8-f7e1-4e83-a383-5942caab89d6)">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/nx/horizon" local="$PROJECT_DIR$" />
+            <mapping deploy="/home/nx/horizon/YU" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />

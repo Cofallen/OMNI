@@ -71,8 +71,6 @@ void YU_F_CHASSIS_INIT()
  */
 void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MOD)
 {
-    if (MOD == YU_D_MOD_GIMBAL) return;
-
     float VX=0.0f, VY=0.0f, VR=0.0f;
     double ANGLE_RELATIVE = 0.0f,ANGLE_RAD = 0.0f;       // 得到vx,vy,vr,angle
     VX =  (float)DBUS->REMOTE.CH1_int16;
