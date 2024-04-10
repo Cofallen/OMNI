@@ -43,8 +43,6 @@ bool YU_F_CAN_INIT(void)
 //        exit(1);
     }
 
-    // 这里RUI直接访问.ifrn_name，我感觉不太好，有空再看看
-    // RUI 用的宏定义。。。 挺好，我也用（才怪）。
     //  # define ifr_name	ifr_ifrn.ifrn_name	/* interface name 	*/
     strcpy(YU_C_IFR[0].ifr_ifrn.ifrn_name,YU_C_IFNAMES[0]);
 
@@ -106,7 +104,7 @@ bool YU_F_CAN_INIT(void)
 }
 
 
-// CAN 解算，先写老版的吧，新版的看不懂。
+// CAN 解算，先写老版的吧
 
 /**
  * @brief CAN 解算
@@ -122,7 +120,7 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
     if (can == YU_D_CAN_1)
     {
 //        printf("CANID%x\n",CAN_ID);
-        // 这几个解算也看不懂
+
         switch (CAN_ID)
         {
             case YU_D_CAN_ID_YAW: YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_GIMBAL_YAW],CAN_DATA,YU_D_MOTOR_TYPE_6020,YU_D_STATUS_ID_GIMBAL_YAW);
@@ -162,7 +160,7 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
     return  true;
 }
 
-// CAN 接收先写旧版 有时间全看一遍，都不太懂
+// CAN 接收先写旧版
 
 bool YU_F_CAN_RECV(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DATA,uint8_t can)
 {
@@ -222,6 +220,3 @@ bool YU_F_CAN_RECV(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DATA,uint8_t
     return 1;
 }
 
-
-// 电机CAN发送
-// 哈哈哈哈哈哈哈哈哈 不写了--地盘
