@@ -16,7 +16,7 @@ struct
     int SINGLE_ANGLE;
 } YU_TYPEDEF_ATTACK;
 
-bool RUI_F_ATTACK_INIT()
+bool YU_F_ATTACK_INIT()
 {
     std::string FILENAME = YU_D_CONFIG_PATH;
     YU_TYPEDEF_PID_CONFIG CONFIG = YU_F_PARSE_CONFIG(FILENAME);
@@ -28,4 +28,33 @@ bool RUI_F_ATTACK_INIT()
     return true;
 }
 
-//float YU_F_GET_FIRE_WIPE_SPEED(YU_TYPEDEF_DBUS *DBUS, )
+float YU_F_GET_FIRE_WIPE_SPEED(YU_TYPEDEF_DBUS *DBUS, YU_TYPEDEF_MOTOR *MOTOR, uint8_t VISION)
+{
+    static uint8_t SINGLE_LOCK = 0;
+    static int64_t AIM = 0;
+    uint8_t MOD = DBUS->R_FLAG;
+    // 停止
+    if (MOD == 0)
+    {
+        // 单发解锁
+        SINGLE_LOCK = YU_D_LOCK_ON;
+        AIM = MOTOR->DATA.ANGLE_INFINITE;
+    } else
+    {
+        SINGLE_LOCK = YU_D_LOCK_OFF;
+    }
+    return 0.0f;
+}
+
+bool YU_F_ATTACK(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int8_t VISION_TYPE)
+{
+    static bool STR = false;
+    if (!STR)
+    {
+        YU_F_ATTACK_INIT();
+    }
+
+    MOTOR[YU_D_MOTOR_ATTACK_L].DATA.AIM = (float)YU_TYPEDEF_ATTACK.WIPE_MAX_SPEED;
+
+    return true;
+}

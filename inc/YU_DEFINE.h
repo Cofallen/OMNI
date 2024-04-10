@@ -84,8 +84,8 @@
 //云台电机
 #define YU_D_MOTOR_GIMBAL_YAW    0
 #define YU_D_MOTOR_GIMBAL_PIT    1
-#define YU_D_MOTOR_ATTACK_L      1
-#define YU_D_MOTOR_ATTACK_R      0
+#define YU_D_MOTOR_ATTACK_L      0
+#define YU_D_MOTOR_ATTACK_R      1
 #define YU_D_MOTOR_ATTACK_G      2
 //电机类型
 #define YU_D_MOTOR_TYPE_3508     1
@@ -116,6 +116,8 @@
 #define YU_D_MOD_CHASSIS 3
 #define YU_D_MOD_GIMBAL 1
 #define YU_D_MOD_CHASSIS_TRACE 2
+#define YU_D_LOCK_ON 0
+#define YU_D_LOCK_OFF 1
 
 /**                       模式                           **/
 
