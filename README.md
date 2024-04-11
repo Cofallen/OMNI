@@ -79,12 +79,10 @@ socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
 
 
 ## TODO
-
 - [ ] 麦轮小车上要实现的
   - [ ] 多线程锁监测遥控离线
   - [ ] CMake,gitignore的的高级运用
   - [ ] `docker`镜像下运行代码,使用`start.sh`
-  
 - [x] 剩余代码任务
   - [x] UART遥控解算
   - [x] 写地盘
@@ -102,3 +100,110 @@ socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
   - [x] ~~socket CAN 通信整理~~
   - [ ] ~~RUI的代码吃透~~
 
+## 文件
+
+```
+├── build
+│   └── debug
+│       ├── CMakeCache.txt
+│       ├── CMakeFiles
+│       │   ├── 3.18.4
+│       │   │   ├── CMakeCCompiler.cmake
+│       │   │   ├── CMakeCXXCompiler.cmake
+│       │   │   ├── CMakeDetermineCompilerABI_C.bin
+│       │   │   ├── CMakeDetermineCompilerABI_CXX.bin
+│       │   │   ├── CMakeSystem.cmake
+│       │   │   ├── CompilerIdC
+│       │   │   │   ├── a.out
+│       │   │   │   ├── CMakeCCompilerId.c
+│       │   │   │   └── tmp
+│       │   │   └── CompilerIdCXX
+│       │   │       ├── a.out
+│       │   │       ├── CMakeCXXCompilerId.cpp
+│       │   │       └── tmp
+│       │   ├── clion-environment.txt
+│       │   ├── cmake.check_cache
+│       │   ├── CMakeDirectoryInformation.cmake
+│       │   ├── CMakeOutput.log
+│       │   ├── CMakeTmp
+│       │   ├── demo.dir
+│       │   │   ├── build.make
+│       │   │   ├── cmake_clean.cmake
+│       │   │   ├── CXX.includecache
+│       │   │   ├── DependInfo.cmake
+│       │   │   ├── depend.internal
+│       │   │   ├── depend.make
+│       │   │   ├── flags.make
+│       │   │   ├── link.txt
+│       │   │   ├── progress.make
+│       │   │   └── src
+│       │   │       ├── main.cpp.o
+│       │   │       ├── Test.cpp.o
+│       │   │       ├── YU_ATTACK.cpp.o
+│       │   │       ├── YU_CAN.cpp.o
+│       │   │       ├── YU_CHASSIS.cpp.o
+│       │   │       ├── YU_CONFIG.cpp.o
+│       │   │       ├── YU_DEBUG.cpp.o
+│       │   │       ├── YU_GIMBAL.cpp.o
+│       │   │       ├── YU_MATH.cpp.o
+│       │   │       ├── YU_MOTOR.cpp.o
+│       │   │       ├── YU_PID.cpp.o
+│       │   │       ├── YU_ROOT_INIT.cpp.o
+│       │   │       ├── YU_THREAD.cpp.o
+│       │   │       ├── YU_TOP.cpp.o
+│       │   │       ├── YU_UART.cpp.o
+│       │   │       └── YU_VOFA.cpp.o
+│       │   ├── Makefile2
+│       │   ├── Makefile.cmake
+│       │   ├── progress.marks
+│       │   └── TargetDirectories.txt
+│       ├── cmake_install.cmake
+│       ├── demo
+│       ├── demo.cbp
+│       ├── Makefile
+│       └── Testing
+│           └── Temporary
+│               └── LastTest.log
+├── CMakeLists.txt
+├── config.ini
+├── Dockerfile
+├── inc
+│   ├── main.h
+│   ├── Test.h
+│   ├── YU_ATTACK.h
+│   ├── YU_CAN.h
+│   ├── YU_CHASSIS.h
+│   ├── YU_CONFIG.h
+│   ├── YU_DEBUG.h
+│   ├── YU_DEFINE.h
+│   ├── YU_GIMBAL.h
+│   ├── YU_MATH.h
+│   ├── YU_MOTOR.h
+│   ├── YU_PID.h
+│   ├── YU_ROOT_INIT.h
+│   ├── YU_THREAD.h
+│   ├── YU_TOP.h
+│   ├── YU_UART.h
+│   └── YU_VOFA.h
+├── README.md
+├── src
+│   ├── main.cpp
+│   ├── Test.cpp
+│   ├── YU_ATTACK.cpp
+│   ├── YU_CAN.cpp
+│   ├── YU_CHASSIS.cpp
+│   ├── YU_CONFIG.cpp
+│   ├── YU_DEBUG.cpp
+│   ├── YU_GIMBAL.cpp
+│   ├── YU_MATH.cpp
+│   ├── YU_MOTOR.cpp
+│   ├── YU_PID.cpp
+│   ├── YU_ROOT_INIT.cpp
+│   ├── YU_THREAD.cpp
+│   ├── YU_TOP.cpp
+│   ├── YU_UART.cpp
+│   └── YU_VOFA.cpp
+└── start.sh
+
+15 directories, 86 files
+```
