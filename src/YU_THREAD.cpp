@@ -118,8 +118,8 @@ int8_t MOTOR_TYPE = 9;
 {
     const float PID_GIMBAL_YAW_A[5] = {8.1f, 0.0001f, 0, 987, 995};
     const float PID_GIMBAL_YAW_S[5] = {25.0f, 0, 0, 999, 28000};
-    const float PID_GIMBAL_PIT_A[5] = {4.0f, 0.002f, 0, 1962, 1088};
-    const float PID_GIMBAL_PIT_S[5] = {10.0f, 0, 0, 1000, 28000};
+    const float PID_GIMBAL_PIT_A[5] = {10.3f, 0.0001f, 1.0f, 772, 830};
+    const float PID_GIMBAL_PIT_S[5] = {20.0f, 0, 0, 0, 27892};
 
 
     YU_T_PID_INIT(&YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].PID_S, PID_GIMBAL_YAW_S);
@@ -129,7 +129,7 @@ int8_t MOTOR_TYPE = 9;
 
 //    确保电机先接收到PIT数据后再整，可以将RECV搁到其他线程？
 //    GIMBAL_TARGET[YU_D_MOTOR_GIMBAL_PIT] = YU_V_MOTOR_CHASSIS[YU_D_MOTOR_GIMBAL_PIT].DATA.ANGLE_NOW;
-    YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_PIT].DATA.AIM = 3500;
+    YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_PIT].DATA.AIM = 5500;
 
     YU_V_MOTOR_GIMBAL[0].DATA.LAPS = YU_V_MOTOR_GIMBAL[1].DATA.LAPS = 0;
 
@@ -237,7 +237,4 @@ int8_t MOTOR_TYPE = 9;
         usleep(1);
     }
 }
-
-
-
 
