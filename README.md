@@ -80,6 +80,11 @@ socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
 
 ## TODO
 
+- [ ] 麦轮小车上要实现的
+  - [ ] 多线程锁监测遥控离线
+  - [ ] CMake,gitignore的的高级运用
+  - [ ] `docker`镜像下运行代码,使用`start.sh`
+  
 - [x] 剩余代码任务
   - [x] UART遥控解算
   - [x] 写地盘
@@ -93,32 +98,7 @@ socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
   - [x] 配合UDP+上位机修改配置文件
 - [x] 遗留的坑
   - [x] UDP发送上位机
-- [ ] 代码整理
-  - [x] socket CAN 通信整理
-  - [ ] 多线程的高级运用
-  - [ ] CMake,gitignore的的高级运用
-  - [ ] RUI的代码吃透
+- [ ] ~~代码整理~~
+  - [x] ~~socket CAN 通信整理~~
+  - [ ] ~~RUI的代码吃透~~
 
-
-不要看，可能记错了
-```shell
-ls /dev
-ls -l /dev | grep ttyTH
-* sudo chmod 777 /dev/ttyTHS0 
-ls -l /dev | grep ttyTH
-cat  /dev/ttyTHS0
-```
-
-```shell
-cd /omni/build/debug # 调试的路径
-
-cd /omni
-ls grep tty          # 具体的忘了，
-
-ls omni | grep tty   # 大写小写忘了
-
-TTYS0                # 串口
-# ls -l ttys0
-chomd 777 ttys0
-
-```
