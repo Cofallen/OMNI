@@ -28,7 +28,7 @@ bool YU_F_ATTACK_INIT()
     return true;
 }
 
-float YU_F_GET_FIRE_WIPE_SPEED(YU_TYPEDEF_DBUS *DBUS, YU_TYPEDEF_MOTOR *MOTOR, uint8_t VISION)
+float YU_F_GET_FIRE_AIM(YU_TYPEDEF_DBUS *DBUS, YU_TYPEDEF_MOTOR *MOTOR, uint8_t VISION)
 {
     static uint8_t SINGLE_LOCK = 0;
     static int64_t AIM = 0;
