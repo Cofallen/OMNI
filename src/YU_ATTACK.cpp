@@ -20,13 +20,14 @@ bool YU_F_ATTACK_INIT()
     return true;
 }
 
-float YU_F_GET_FIRE_AIM(YU_TYPEDEF_DBUS *DBUS, YU_TYPEDEF_MOTOR *MOTOR, uint8_t VISION)
+float YU_F_ATTACK_FIRE_AIM(YU_TYPEDEF_DBUS *DBUS, YU_TYPEDEF_MOTOR *MOTOR, uint8_t VISION)
 {
 
     return 0.0f;
 }
 
-void YU_F_CHECK_
+void YU_F_ATTACK_CHECK(){}
+
 bool YU_F_ATTACK(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int8_t VISION_TYPE)
 {
     static bool STR = false;
