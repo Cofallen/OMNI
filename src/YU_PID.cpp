@@ -236,6 +236,7 @@ void YU_T_PID_INIT(YU_TYPEDEF_MOTOR_PID *PID, const float *PID_V)
  */
 float YU_T_PID_CAL(YU_TYPEDEF_MOTOR_PID *PID, float TARGET, float REALVAL)
 {
+//    printf("PID_CAL\n");
     if (PID == nullptr)
     {
         return 0.0f;
