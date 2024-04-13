@@ -65,18 +65,18 @@ int8_t MOTOR_TYPE = 9;
         usleep(1);
 
         YU_F_CAN_RECV(YU_V_MOTOR_CHASSIS, &YU_V_TOP_DATA_CHASSIS, 1);
-
+//        printf("MOTOR %d\n",YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_2].DATA.ANGLE_NOW);
         YU_F_CHASSIS_MECANUM(YU_V_MOTOR_CHASSIS, &YU_V_DBUS, YU_V_DBUS.REMOTE.S1_u8); // S1 == MOD_CHASSIS == 3
         YU_F_CHASSIS_MECANUM_CAL(YU_V_MOTOR_CHASSIS);
 
 //        printf("CH: %d %d %d %d",YU_V_MOTOR_CHASSIS[0].DATA.CAN_SEND,YU_V_MOTOR_CHASSIS[1].DATA.CAN_SEND,
 //                                 YU_V_MOTOR_CHASSIS[2].DATA.CAN_SEND,YU_V_MOTOR_CHASSIS[3].DATA.CAN_SEND);
-        if(i++%10 == 0 ) {
+//        if(i++%10 == 0 ) {
             YU_F_CAN_SEND(1, 0x200, YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_1].DATA.CAN_SEND,
                           YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_2].DATA.CAN_SEND,
                           YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_3].DATA.CAN_SEND,
                           YU_V_MOTOR_CHASSIS[YU_D_MOTOR_CHASSIS_4].DATA.CAN_SEND);
-        }
+//        }
     }
 
 }
@@ -145,7 +145,7 @@ int8_t MOTOR_TYPE = 9;
 
         usleep(1);
 
-        YU_F_CAN_RECV(YU_V_MOTOR_GIMBAL,&YU_V_TOP_DATA_GIMBAL,0);
+        YU_F_CAN_RECV(YU_V_MOTOR_GIMBAL,&YU_V_TOP_DATA_GIMBAL,2);
 
         YU_F_GIMBAL(YU_V_MOTOR_GIMBAL, &YU_V_DBUS);
 
