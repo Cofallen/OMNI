@@ -29,7 +29,7 @@ sudo ifconfig can2 up
 
 如果你要刷`can`，请按如下方式操作：
 1. 在[CANable](https://canable.io/updater/canable2.html)官网上，找到红字`this utility`，点击安装驱动;
-2. 将你的`can`设备的`boot`引脚，记得重新上电;
+2. 将你的`can`设备的`boot`引脚短接后，记得重新上电;
 3. 选择正确的协议，点击`Connect and Update`按钮，理论将完成刷`can`.
 
 
