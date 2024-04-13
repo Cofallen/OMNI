@@ -52,8 +52,8 @@
 
 
 /******************************CAN_ID********************************/
-#define YU_D_CAN_1 0
-#define YU_D_CAN_2 1
+#define YU_D_CAN_1 1
+#define YU_D_CAN_2 2
 //底盘
 #define YU_D_CAN_ID_CHASSIS_1    0x201
 #define YU_D_CAN_ID_CHASSIS_2    0x202
