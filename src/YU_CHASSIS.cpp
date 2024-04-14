@@ -65,7 +65,7 @@ void YU_F_CHASSIS_INIT()
 
 
 /**
- * @brief 自己写的麦轮地盘函数，不知道能不能用
+ * @brief 自己仿照写的麦轮地盘函数，能用
  * @details 解算，将遥控数据转化成电机目标值
  * @param DBUS
  */
@@ -75,11 +75,10 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MO
     double ANGLE_RELATIVE = 0.0f,ANGLE_RAD = 0.0f;       // 得到vx,vy,vr,angle
     VX =  (float)DBUS->REMOTE.CH1_int16;
     VY =  (float)DBUS->REMOTE.CH0_int16;
-//    printf("VX%f\n",VX);
 //    VR = -(float)DBUS->REMOTE.CH2_int16;
     VR = 0;
 
-    // 底盘跟随模式
+    // 底盘跟随模式，没试
     if (MOD == YU_D_MOD_CHASSIS_TRACE)
     {
         static bool STR = false;         // 排除DATA.ANGLE_LAST 一开始为0  TODO: 有点丑陋,以后不加缩进
@@ -110,13 +109,6 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MO
     MecanumData.Mecanum_Out[1] = (-VX + VY - VR * MecanumData.Raid_FR) * MecanumData.Wheel_rpm_ratio;
     MecanumData.Mecanum_Out[2] = (-VX - VY - VR * MecanumData.Raid_BR) * MecanumData.Wheel_rpm_ratio;
     MecanumData.Mecanum_Out[3] = ( VX - VY - VR * MecanumData.Raid_BL) * MecanumData.Wheel_rpm_ratio;
-
-//    printf("MOTOR1:  %f  MOTOR2:  %f  MOTOR3:  %f  MOTOR4:  %f\n",
-//           MecanumData.Mecanum_Out[0],
-//           MecanumData.Mecanum_Out[1],
-//           MecanumData.Mecanum_Out[2],
-//           MecanumData.Mecanum_Out[3]
-//    );
 
     float TEMPMAX = 0.0f;
     for (int i = 0; i < 4; ++i)
