@@ -9,6 +9,7 @@
 #include "YU_CAN.h"
 #include "YU_DEFINE.h"
 #include "YU_THREAD.h"
+#include "YU_MATH.h"
 
 #include <cmath>
 
@@ -75,20 +76,20 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MO
     double ANGLE_RELATIVE = 0.0f,ANGLE_RAD = 0.0f;       // 得到vx,vy,vr,angle
     VX =  (float)DBUS->REMOTE.CH1_int16;
     VY =  (float)DBUS->REMOTE.CH0_int16;
-//    VR = -(float)DBUS->REMOTE.CH2_int16;
     VR = 0;
+//    VR = ((float)YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW - (float)YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_INIT) * YU_D_RELATIVE_CAL_PARAM;
 
     // 底盘跟随模式，没试
-    if (MOD == YU_D_MOD_CHASSIS_TRACE)
-    {
-        static bool STR = false;         // 排除DATA.ANGLE_LAST 一开始为0  TODO: 有点丑陋,以后不加缩进
-        if (YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_LAST == 0) STR = true;
-
-        if (!STR)  // STR == false
-        {
-            ANGLE_RELATIVE = (double)(YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW - YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_LAST);
-            if (ANGLE_RELATIVE > 4096.0f) ANGLE_RELATIVE -= 8192.0f;
-            else if (ANGLE_RELATIVE < -4096.0f) ANGLE_RELATIVE += 8192.0f;
+//    if (MOD == YU_D_MOD_CHASSIS_TRACE)
+//    {
+//        static bool STR = false;         // 排除DATA.ANGLE_LAST 一开始为0  TODO: 有点丑陋,以后不加缩进
+//        if (YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_LAST == 0) STR = true;
+//
+//        if (!STR)  // STR == false
+//        {
+            ANGLE_RELATIVE = (double)(YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW - YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_INIT);
+//            if (ANGLE_RELATIVE > 4096.0f) ANGLE_RELATIVE -= 8192.0f;
+//            else if (ANGLE_RELATIVE < -4096.0f) ANGLE_RELATIVE += 8192.0f;
 
             ANGLE_RAD = ANGLE_RELATIVE * YU_D_RELATIVE_CAL_PARAM;
             //得到相对角度的sin，cos
@@ -97,9 +98,9 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MO
             //得到转化后的vx,vy,vr
             VX = -VY * angleSin + VX * angleCos;
             VY =  VY * angleCos + VX * angleSin;
-        }
+//        }
 
-    }
+//    }
 
     VX = YU_D_MATH_LIMIT(MecanumData.Max_vx_Speed, -MecanumData.Max_vx_Speed, VX);
     VY = YU_D_MATH_LIMIT(MecanumData.Max_vy_Speed, -MecanumData.Max_vy_Speed, VY);

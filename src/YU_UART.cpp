@@ -6,6 +6,7 @@
 #include "stdio.h"
 #include "YU_ROOT_INIT.h"
 #include "YU_THREAD.h"
+#include "YU_MATH.h"
 
 // 这个有问题
 //struct YU_TYPEDEF_MONITOR YU_V_MONITOR{ };
@@ -127,6 +128,10 @@
 
         }
 
+        if (YU_V_DBUS->REMOTE.CH0_int16 <= 10 && YU_V_DBUS->REMOTE.CH0_int16 >= -10) YU_V_DBUS->REMOTE.CH0_int16 = 0;
+        if (YU_V_DBUS->REMOTE.CH1_int16 <= 10 && YU_V_DBUS->REMOTE.CH1_int16 >= -10) YU_V_DBUS->REMOTE.CH1_int16 = 0;
+        if (YU_V_DBUS->REMOTE.CH2_int16 <= 10 && YU_V_DBUS->REMOTE.CH2_int16 >= -10) YU_V_DBUS->REMOTE.CH2_int16 = 0;
+        if (YU_V_DBUS->REMOTE.CH3_int16 <= 10 && YU_V_DBUS->REMOTE.CH3_int16 >= -10) YU_V_DBUS->REMOTE.CH3_int16 = 0;
 
 //        printf("收到遥控器数据\n");
 
@@ -136,7 +141,6 @@
 //                   YU_V_DBUS->REMOTE.S1_u8,     YU_V_DBUS->REMOTE.S2_u8);
 
 //        memset(YU_V_DBUS, 0, sizeof (*YU_V_DBUS));
-
 
     }
 }

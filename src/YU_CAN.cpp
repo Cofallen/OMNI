@@ -29,7 +29,7 @@ bool YU_F_CAN_INIT(void)
     // 变量
     struct sockaddr_can YU_C_ADDR[2];
     struct ifreq YU_C_IFR[2];
-    char *YU_C_IFNAMES[2] = {(char *)"can0",(char *)"can1"}; // 两个CAN接口名
+    char *YU_C_IFNAMES[2] = {(char *)"can1",(char *)"can2"}; // 两个CAN接口名
 
     // 创建socket and bind can
 
