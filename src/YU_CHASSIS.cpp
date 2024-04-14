@@ -82,23 +82,17 @@ void YU_F_CHASSIS_MECANUM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int MO
     // 底盘跟随模式，没试
 //    if (MOD == YU_D_MOD_CHASSIS_TRACE)
 //    {
-//        static bool STR = false;         // 排除DATA.ANGLE_LAST 一开始为0  TODO: 有点丑陋,以后不加缩进
-//        if (YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_LAST == 0) STR = true;
-//
-//        if (!STR)  // STR == false
-//        {
-            ANGLE_RELATIVE = (double)(YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW - YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_INIT);
+        ANGLE_RELATIVE = (double)(YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_NOW - YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW].DATA.ANGLE_INIT);
 //            if (ANGLE_RELATIVE > 4096.0f) ANGLE_RELATIVE -= 8192.0f;
 //            else if (ANGLE_RELATIVE < -4096.0f) ANGLE_RELATIVE += 8192.0f;
 
-            ANGLE_RAD = ANGLE_RELATIVE * YU_D_RELATIVE_CAL_PARAM;
-            //得到相对角度的sin，cos
-            auto angleSin = std::sin(ANGLE_RAD);
-            auto angleCos = std::cos(ANGLE_RAD);
-            //得到转化后的vx,vy,vr
-            VX = -VY * angleSin + VX * angleCos;
-            VY =  VY * angleCos + VX * angleSin;
-//        }
+        ANGLE_RAD = ANGLE_RELATIVE * YU_D_RELATIVE_CAL_PARAM;
+        //得到相对角度的sin，cos
+        auto angleSin = std::sin(ANGLE_RAD);
+        auto angleCos = std::cos(ANGLE_RAD);
+        //得到转化后的vx,vy,vr
+        VX = -VY * angleSin + VX * angleCos;
+        VY =  VY * angleCos + VX * angleSin;
 
 //    }
 
@@ -150,6 +144,5 @@ void YU_F_CHASSIS_MECANUM_CAL(YU_TYPEDEF_MOTOR *MOTOR)
     MOTOR[YU_D_MOTOR_CHASSIS_2].DATA.CAN_SEND = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_2].PID_S, MOTOR[YU_D_MOTOR_CHASSIS_2].DATA.AIM, MOTOR[YU_D_MOTOR_CHASSIS_2].DATA.SPEED_NOW);
     MOTOR[YU_D_MOTOR_CHASSIS_3].DATA.CAN_SEND = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_3].PID_S, MOTOR[YU_D_MOTOR_CHASSIS_3].DATA.AIM, MOTOR[YU_D_MOTOR_CHASSIS_3].DATA.SPEED_NOW);
     MOTOR[YU_D_MOTOR_CHASSIS_4].DATA.CAN_SEND = (int16_t)YU_T_PID_CAL(&MOTOR[YU_D_MOTOR_CHASSIS_4].PID_S, MOTOR[YU_D_MOTOR_CHASSIS_4].DATA.AIM, MOTOR[YU_D_MOTOR_CHASSIS_4].DATA.SPEED_NOW);
-//    printf("PIDOVER\n");
 
 }
