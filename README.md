@@ -11,14 +11,14 @@
 
 ## 问题
 
-- [x] `can`不同固件初始化问题：
+- [ ] `can`不同固件初始化问题：(有问题)
 
 基本初始化命令:
 
 ```shell
 sudo modprobe mttcan 
 sudo ip link set can1 type can bitrate 1000000
-sudo ip set can1 up
+sudo ip link set can1 up
 
 sudo slcand -o -c -s8 /dev/ttyACM0 can2
 sudo ifconfig can2 up
