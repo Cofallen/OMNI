@@ -131,8 +131,8 @@ static bool YU_F_CAN_RESOLVE(YU_TYPEDEF_MOTOR *MOTOR,YU_TYPEDEF_TOP *YU_V_TOP_DA
                 break;
             case YU_D_CAN_ID_ATTACK_R:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_ATTACK_R], CAN_DATA, YU_D_MOTOR_TYPE_3508, YU_D_STATUS_ID_ATTACK_R);
                 break;
-//            case YU_D_CAN_ID_ATTACK_G:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_ATTACK_G], CAN_DATA, YU_D_MOTOR_TYPE_2006, YU_D_STATUS_ID_ATTACK_G);
-//                break;
+            case YU_D_CAN_ID_ATTACK_G:YU_F_MOTOR_CAN_CAL(&MOTOR[YU_D_MOTOR_ATTACK_G], CAN_DATA, YU_D_MOTOR_TYPE_2006, YU_D_STATUS_ID_ATTACK_G);
+                break;
 //            case YU_D_CAN_ID_TOP:YU_F_TOP_CAN_CAL(YU_C_TOP_DATA, CAN_DATA);
 //                break;
             default:break;
