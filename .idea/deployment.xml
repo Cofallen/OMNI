@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="nnx (7c8257a8-f7e1-4e83-a383-5942caab89d6)" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" confirmBeforeDeletion="false">
+  <component name="PublishConfigData" serverName="Remote Development" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" confirmBeforeDeletion="false">
     <option name="confirmBeforeDeletion" value="false" />
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
@@ -36,6 +36,13 @@
           </excludedPaths>
         </serverdata>
       </paths>
+      <paths name="nnx (fa4bc2ff-c6b3-4d19-8683-2341fd324928)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/OMNI" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="nx (c991f88e-9db7-4063-a44d-88d97f83ce33)">
         <serverdata>
           <mappings>
@@ -44,6 +51,13 @@
         </serverdata>
       </paths>
       <paths name="全全">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="远程主机 (3536704c-a7b7-4edd-8033-11170bcc3285)">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
