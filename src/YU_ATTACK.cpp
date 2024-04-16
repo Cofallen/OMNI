@@ -81,7 +81,7 @@ void YU_F_ATTACK_JAM(YU_TYPEDEF_MOTOR *MOTOR)
         YU_V_MONITOR_ATTACK.FLAG = YU_D_DIRECTION_MINUS;
     }
 
-
+    // 需要计算卡弹后到底转多少度，还是积累着来，最后搞一次
 
 }
 
