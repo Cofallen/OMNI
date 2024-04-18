@@ -9,19 +9,18 @@
 #include <cstdint>
 #include "YU_DEFINE.h"
 
-//struct YU_TYPEDEF_MONITOR
-//{
-//    int8_t STATUS[2][YU_D_STATUS_NUM];
-//    uint16_t TIME[YU_D_STATUS_NUM];
-//};
-
-//struct YU_TYPEDEF_MONITOR YU_V_MONITOR{ };
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
+#include <chrono>
 
 // 自己写的遥控监视
 typedef struct
 {
-    int64_t TIME;
-    int8_t STATUS;
+    std::mutex MUTEX;
+    std::condition_variable CV;
+    std::atomic<bool> STATUS;
+    std::chrono::microseconds TIMEOUT;
 }YU_TYPEDEF_MONITOR_DBUS;
 
 

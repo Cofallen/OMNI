@@ -99,8 +99,8 @@
 #define YU_D_NOW 1
 #define YU_D_LAST 0
 
-#define YU_D_MONITOR_DBUS_OFFLINE 0
-#define YU_D_MONITOR_DBUS_ONLINE 1
+#define YU_D_MONITOR_OFFLINE false
+#define YU_D_MONITOR_ONLINE  true
 /*******************************************************************/
 
 

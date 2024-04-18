@@ -22,6 +22,7 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <ifaddrs.h>
+#include <chrono>
 
 //#define YU_DEBUG_CHASSIS 1
 
@@ -43,6 +44,8 @@ YU_TYPEDEF_TOP YU_V_TOP_DATA_GIMBAL{ };
 YU_TYPEDEF_DEBUG YU_V_DEBUG[10]{ };
 int8_t MOTOR_TYPE = 9;
 
+std::mutex YU_V_MUTEX;
+std::condition_variable YU_V_CV;
 /**                    全局变量定义                    **/
 
 
@@ -92,26 +95,26 @@ int8_t MOTOR_TYPE = 9;
 
 [[noreturn]] void YU_F_THREAD_MONITOR()
 {
-    YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_DBUS_OFFLINE;
-    YU_V_MONITOR_DBUS.TIME = 200;
+    YU_V_MONITOR_DBUS.TIMEOUT = std::chrono::milliseconds(50);  // 最大超时时间50ms
+    YU_V_MONITOR_DBUS.STATUS  = YU_D_MONITOR_OFFLINE;
 
     while (true)
     {
         usleep(1);
+        {
+            std::unique_lock<std::mutex> LOCK(YU_V_MONITOR_DBUS.MUTEX);
+            YU_V_MONITOR_DBUS.CV.wait_for(LOCK, YU_V_MONITOR_DBUS.TIMEOUT, []{return YU_V_MONITOR_DBUS.STATUS.load();});
 
-        YU_V_MONITOR_DBUS.TIME++;
-        if (YU_V_MONITOR_DBUS.TIME >= 100)
-        {
-            YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_DBUS_OFFLINE;
-        } else
-        {
-            YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_DBUS_ONLINE;
-        }
+            if (YU_V_MONITOR_DBUS.STATUS.load())
+            {
+                YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_OFFLINE;  // 收到后将状态关闭，为下一次接收准备
+            } else
+            {
+                // 50ms未收到遥控数据。判定离线
+                printf("DBUS OFFLINE!\n");
+                memset(&YU_V_DBUS,0,sizeof (YU_V_DBUS));
+            }
 
-        if (YU_V_MONITOR_DBUS.STATUS == YU_D_MONITOR_DBUS_OFFLINE)
-        {
-            memset(&YU_V_DBUS, 0, sizeof (YU_V_DBUS));
-            printf("DBUS OFFLINE\n");
         }
     }
 }

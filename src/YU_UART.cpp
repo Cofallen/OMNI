@@ -8,6 +8,8 @@
 #include "YU_THREAD.h"
 #include "YU_MATH.h"
 
+#include <mutex>
+
 // 这个有问题
 //struct YU_TYPEDEF_MONITOR YU_V_MONITOR{ };
 
@@ -99,41 +101,40 @@
     // 遥控器数据接收
     while (true)
     {
-        usleep(1);
-        auto DATA_FLAG =  read(UART_FD, YU_V_DBUS_UNION.GET_DATA,sizeof (YU_V_DBUS_UNION.GET_DATA));
+        {
+            std::lock_guard<std::mutex> LOCK(YU_V_MONITOR_DBUS.MUTEX);
+
+            usleep(1);
+            auto DATA_FLAG =  read(UART_FD, YU_V_DBUS_UNION.GET_DATA,sizeof (YU_V_DBUS_UNION.GET_DATA));
 
 //        if (DATA_FLAG > 0)
 //            printf("DATA FLAG: %ld\n",DATA_FLAG);
 
-        if (DATA_FLAG == 12)
-        {
+            if (DATA_FLAG == 12)
+            {
+                YU_V_DBUS->REMOTE.S1_u8 = YU_V_DBUS_UNION.DATA_NEATEN.S1;
+                YU_V_DBUS->REMOTE.S2_u8 = YU_V_DBUS_UNION.DATA_NEATEN.S2;
 
-            YU_V_DBUS->REMOTE.S1_u8 = YU_V_DBUS_UNION.DATA_NEATEN.S1;
-            YU_V_DBUS->REMOTE.S2_u8 = YU_V_DBUS_UNION.DATA_NEATEN.S2;
+                YU_V_DBUS->REMOTE.CH0_int16 = (int16_t)(YU_V_DBUS_UNION.DATA_NEATEN.CH0 - 1024);
+                YU_V_DBUS->REMOTE.CH1_int16 = (int16_t)(YU_V_DBUS_UNION.DATA_NEATEN.CH1 - 1024);
+                YU_V_DBUS->REMOTE.CH2_int16 = (int16_t)(YU_V_DBUS_UNION.DATA_NEATEN.CH2 - 1024);
+                YU_V_DBUS->REMOTE.CH3_int16 = (int16_t)(YU_V_DBUS_UNION.DATA_NEATEN.CH3 - 1024);
+                YU_V_DBUS->REMOTE.DIR_int16 = (int16_t)(YU_V_DBUS_UNION.DATA_NEATEN.DIR - 1024);
 
-            YU_V_DBUS->REMOTE.CH0_int16 = (int16_t)(YU_V_DBUS_UNION.DATA_NEATEN.CH0 - 1024);
-            YU_V_DBUS->REMOTE.CH1_int16 = (int16_t)(YU_V_DBUS_UNION.DATA_NEATEN.CH1 - 1024);
-            YU_V_DBUS->REMOTE.CH2_int16 = (int16_t)(YU_V_DBUS_UNION.DATA_NEATEN.CH2 - 1024);
-            YU_V_DBUS->REMOTE.CH3_int16 = (int16_t)(YU_V_DBUS_UNION.DATA_NEATEN.CH3 - 1024);
-            YU_V_DBUS->REMOTE.DIR_int16 = (int16_t)(YU_V_DBUS_UNION.DATA_NEATEN.DIR - 1024);
-
-
-
-            // 发射标志位
+                // 发射标志位
 //            YU_V_DBUS->L_FLAG = CORRECTION_ARRAY[CORRECTION_CHOSE_L][YU_V_DBUS->REMOTE.S1_u8 - 1];
 //            YU_V_DBUS->R_FLAG = CORRECTION_ARRAY[CORRENTION_CHOSE_R][YU_V_DBUS->REMOTE.S2_u8 - 1];
-
-            YU_V_MONITOR_DBUS.TIME = 0;
-
-
+                YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_ONLINE;
+            }
         }
 
-        if (YU_V_DBUS->REMOTE.CH0_int16 <= 10 && YU_V_DBUS->REMOTE.CH0_int16 >= -10) YU_V_DBUS->REMOTE.CH0_int16 = 0;
-        if (YU_V_DBUS->REMOTE.CH1_int16 <= 10 && YU_V_DBUS->REMOTE.CH1_int16 >= -10) YU_V_DBUS->REMOTE.CH1_int16 = 0;
-        if (YU_V_DBUS->REMOTE.CH2_int16 <= 10 && YU_V_DBUS->REMOTE.CH2_int16 >= -10) YU_V_DBUS->REMOTE.CH2_int16 = 0;
-        if (YU_V_DBUS->REMOTE.CH3_int16 <= 10 && YU_V_DBUS->REMOTE.CH3_int16 >= -10) YU_V_DBUS->REMOTE.CH3_int16 = 0;
+            if (YU_V_DBUS->REMOTE.CH0_int16 <= 10 && YU_V_DBUS->REMOTE.CH0_int16 >= -10) YU_V_DBUS->REMOTE.CH0_int16 = 0;
+            if (YU_V_DBUS->REMOTE.CH1_int16 <= 10 && YU_V_DBUS->REMOTE.CH1_int16 >= -10) YU_V_DBUS->REMOTE.CH1_int16 = 0;
+            if (YU_V_DBUS->REMOTE.CH2_int16 <= 10 && YU_V_DBUS->REMOTE.CH2_int16 >= -10) YU_V_DBUS->REMOTE.CH2_int16 = 0;
+            if (YU_V_DBUS->REMOTE.CH3_int16 <= 10 && YU_V_DBUS->REMOTE.CH3_int16 >= -10) YU_V_DBUS->REMOTE.CH3_int16 = 0;
 
-//        printf("收到遥控器数据\n");
+        YU_V_MONITOR_DBUS.CV.notify_one();
+
 
 //            printf("ch0  %4d  ch1  %4d  ch2  %4d  ch3  %4d  s1  %d  s2  %d\n",
 //                   YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
