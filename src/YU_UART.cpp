@@ -128,20 +128,17 @@
             }
         }
 
-            if (YU_V_DBUS->REMOTE.CH0_int16 <= 10 && YU_V_DBUS->REMOTE.CH0_int16 >= -10) YU_V_DBUS->REMOTE.CH0_int16 = 0;
-            if (YU_V_DBUS->REMOTE.CH1_int16 <= 10 && YU_V_DBUS->REMOTE.CH1_int16 >= -10) YU_V_DBUS->REMOTE.CH1_int16 = 0;
-            if (YU_V_DBUS->REMOTE.CH2_int16 <= 10 && YU_V_DBUS->REMOTE.CH2_int16 >= -10) YU_V_DBUS->REMOTE.CH2_int16 = 0;
-            if (YU_V_DBUS->REMOTE.CH3_int16 <= 10 && YU_V_DBUS->REMOTE.CH3_int16 >= -10) YU_V_DBUS->REMOTE.CH3_int16 = 0;
+        if (YU_V_DBUS->REMOTE.CH0_int16 <= 10 && YU_V_DBUS->REMOTE.CH0_int16 >= -10) YU_V_DBUS->REMOTE.CH0_int16 = 0;
+        if (YU_V_DBUS->REMOTE.CH1_int16 <= 10 && YU_V_DBUS->REMOTE.CH1_int16 >= -10) YU_V_DBUS->REMOTE.CH1_int16 = 0;
+        if (YU_V_DBUS->REMOTE.CH2_int16 <= 10 && YU_V_DBUS->REMOTE.CH2_int16 >= -10) YU_V_DBUS->REMOTE.CH2_int16 = 0;
+        if (YU_V_DBUS->REMOTE.CH3_int16 <= 10 && YU_V_DBUS->REMOTE.CH3_int16 >= -10) YU_V_DBUS->REMOTE.CH3_int16 = 0;
 
         YU_V_MONITOR_DBUS.CV.notify_one();
 
-
-//            printf("ch0  %4d  ch1  %4d  ch2  %4d  ch3  %4d  s1  %d  s2  %d\n",
-//                   YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
-//                   YU_V_DBUS->REMOTE.CH2_int16, YU_V_DBUS->REMOTE.CH3_int16,
-//                   YU_V_DBUS->REMOTE.S1_u8,     YU_V_DBUS->REMOTE.S2_u8);
-
-//        memset(YU_V_DBUS, 0, sizeof (*YU_V_DBUS));
+//        printf("ch0  %4d  ch1  %4d  ch2  %4d  ch3  %4d  s1  %d  s2  %d\n",
+//               YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
+//               YU_V_DBUS->REMOTE.CH2_int16, YU_V_DBUS->REMOTE.CH3_int16,
+//               YU_V_DBUS->REMOTE.S1_u8,     YU_V_DBUS->REMOTE.S2_u8);
 
     }
 }
