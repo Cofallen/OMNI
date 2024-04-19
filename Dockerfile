@@ -1,8 +1,11 @@
 FROM ubuntu:20.04
-COPY . .
 WORKDIR /YU
-RUN apt install -y gcc\
-    gdb\
-    cmake
+COPY . .
 
-CMD [ "./start/sh" ]
+RUN chmod +x start.sh
+
+RUN apt-get update && apt-get install -y gcc\
+    cmake
+RUN ./start.sh
+
+CMD [ "./build/debug/demo" ]
