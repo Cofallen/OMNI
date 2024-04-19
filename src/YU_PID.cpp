@@ -257,3 +257,10 @@ float YU_T_PID_CAL(YU_TYPEDEF_MOTOR_PID *PID, float TARGET, float REALVAL)
 
     return PID->OUT.ALL_OUT;
 }
+
+void YU_T_PID_CLEAR(YU_TYPEDEF_MOTOR *MOTOR)
+{
+    memset(&MOTOR->PID_A, 0, sizeof(MOTOR->PID_A));
+    memset(&MOTOR->PID_S, 0 ,sizeof(MOTOR->PID_S));
+    memset(&MOTOR->PID_C, 0, sizeof(MOTOR->PID_C));
+}

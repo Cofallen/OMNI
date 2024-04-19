@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="Remote Development" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" confirmBeforeDeletion="false">
+  <component name="PublishConfigData" serverName="Remote Host (34d8911b-8d8e-48b3-8fa4-97135e88d0d7)" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" confirmBeforeDeletion="false">
     <option name="confirmBeforeDeletion" value="false" />
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="Remote Host (34d8911b-8d8e-48b3-8fa4-97135e88d0d7)">
         <serverdata>
           <mappings>
-            <mapping deploy="/root/OMNI" local="$PROJECT_DIR$" />
+            <mapping deploy="/Nx/OMNI" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />

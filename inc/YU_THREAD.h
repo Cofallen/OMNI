@@ -69,7 +69,7 @@ extern int8_t MOTOR_TYPE;
 [[noreturn]] void YU_F_THREAD_MONITOR();
 [[noreturn]] void YU_F_THREAD_GIMBAL();
 [[noreturn]] void YU_F_THREAD_VOFA();
-
+[[noreturn]] void YU_F_THREAD_EXIT(int signum);
 
 
 
