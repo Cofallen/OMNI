@@ -137,25 +137,52 @@ omni         latest    133b659089e7   4 minutes ago   366MB
 
 ```
 
+## 已解决的问题
 
+- [x] 线程3跑的最快，出现下面运行结果；
 
-```shell
-[+] Building 72.1s (11/11) FINISHED                                                                                                                                  docker:default
- => [internal] load build definition from Dockerfile                                                                                                                           0.0s
- => => transferring dockerfile: 214B                                                                                                                                           0.0s
- => [internal] load metadata for docker.io/library/ubuntu:20.04                                                                                                                1.9s
- => [internal] load .dockerignore                                                                                                                                              0.0s
- => => transferring context: 2B                                                                                                                                                0.0s
- => [1/6] FROM docker.io/library/ubuntu:20.04@sha256:71b82b8e734f5cd0b3533a16f40ca1271f28d87343972bb4cd6bd6c38f1bd38e                                                          0.0s
- => [internal] load build context                                                                                                                                              0.0s
- => => transferring context: 6.28kB                                                                                                                                            0.0s
- => CACHED [2/6] WORKDIR /YU                                                                                                                                                   0.0s
- => [3/6] COPY . .                                                                                                                                                             0.1s
- => [4/6] RUN chmod +x start.sh                                                                                                                                                0.2s
- => [5/6] RUN apt-get update && apt-get install -y gcc    cmake                                                                                                               66.7s
- => [6/6] RUN ./start.sh                                                                                                                                                       0.4s 
- => exporting to image                                                                                                                                                         2.7s
- => => exporting layers                                                                                                                                                        2.7s
- => => writing image sha256:133b659089e75a33ae8c09c40afdb680fa7e009c8dda6a6da12a48e0d40961cd                                                                                   0.0s
- => => naming to docker.io/library/omni                                                                                                                                        0.0s
+*原因：* 这是`CAN INIT`的运行结果，因为没插`CAN`口，在
+
+```c++
+if(ioctl(YU_C_FD[0],SIOCGIFINDEX,&YU_C_IFR[0]) < 0)
+    {
+        perror("Please check if CAN1 EXISTS \n");
+        close(YU_C_FD[0]);
+        exit(-1);
+    }
 ```
+
+直接退出代码。
+
+*解决方案：* 先注释掉这个。
+
+*经测试，编译后成功进入1，2，4线程。2线程没有关闭套接字故将一直循环。*
+
+- [x] 遇到了奇怪的问题，学校里写的UDP发VOFA好像不能用了。
+
+先是`sendto error`，后面直接`bind error`。改了`ip`还是没用。
+
+```c++
+SERVER_ADDR.sin_addr.s_addr = inet_addr("119.178.43.143");
+```
+
+*原因：* `Vscode`编译器强大，原来写的代码部分有误，但是被编译成功了，就没注意到。
+
+```c
+int SERVER_FD = 0;
+struct sockaddr_in SERVER_ADDR = {}, CLIENT_ADDR = {};
+socklen_t CLIENT_ADDR_LEN;
+```
+应改成
+```c
+int SERVER_FD = 0;
+struct sockaddr_in SERVER_ADDR = {}, CLIENT_ADDR = {};
+socklen_t CLIENT_ADDR_LEN = sizeof (CLIENT_ADDR);
+```
+
+~~- [ ] `main.cpp`中线程3注释掉的部分编译不过~~
+- [x] UDP 解算一点也没看懂，就没写
+
+这个需要整理的有点多，整理先放放，先把地盘搓了。
+
+- [x] 只有这一个线程跑了，目前没有看到其他线程运行
