@@ -24,7 +24,6 @@
 #include <ifaddrs.h>
 #include <chrono>
 
-//#define YU_DEBUG_CHASSIS 1
 
 // 待我想想怎么把这几个全局变量搞成函数内用的
 /**                    全局变量定义                    **/
@@ -44,8 +43,7 @@ YU_TYPEDEF_TOP YU_V_TOP_DATA_GIMBAL{ };
 YU_TYPEDEF_DEBUG YU_V_DEBUG[10]{ };
 int8_t MOTOR_TYPE = 9;
 
-std::mutex YU_V_MUTEX;
-std::condition_variable YU_V_CV;
+
 /**                    全局变量定义                    **/
 
 
