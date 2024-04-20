@@ -251,12 +251,18 @@ std::condition_variable YU_V_CV;
     std::cout<<"程序开始退出！！"<<std::endl;
     memset(&YU_V_DBUS, 0, sizeof(YU_V_DBUS));
     std::cout<<"清空遥控数据"<<std::endl;
-    YU_T_PID_CLEAR(YU_V_MOTOR_CHASSIS);
-    YU_T_PID_CLEAR(YU_V_MOTOR_GIMBAL);
+
+    for (auto &IT: YU_V_MOTOR_CHASSIS) {
+        YU_T_PID_CLEAR(&IT);
+    }
+    for (auto &IT: YU_V_MOTOR_GIMBAL) {
+        YU_T_PID_CLEAR(&IT);
+    }
     YU_F_CAN_SEND(YU_D_CAN_1, 0x200, 0, 0, 0, 0);
     YU_F_CAN_SEND(YU_D_CAN_2, 0x2FF, 0, 0, 0, 0);
     std::cout<<"清空电机数据"<<std::endl;
     sleep(2);
     std::cerr<<"程序退出"<<std::endl;
     exit(signum);
+
 }
