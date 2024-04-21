@@ -93,7 +93,7 @@ int8_t MOTOR_TYPE = 9;
 
 [[noreturn]] void YU_F_THREAD_MONITOR()
 {
-    YU_V_MONITOR_DBUS.TIMEOUT = std::chrono::milliseconds(50);  // 最大超时时间50ms
+    YU_V_MONITOR_DBUS.TIMEOUT = std::chrono::milliseconds(50);  // 最大超时时间50mils
     YU_V_MONITOR_DBUS.STATUS  = YU_D_MONITOR_OFFLINE;
 
     while (true)
@@ -108,7 +108,7 @@ int8_t MOTOR_TYPE = 9;
                 YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_OFFLINE;  // 收到后将状态关闭，为下一次接收准备
             } else
             {
-                // 50ms未收到遥控数据。判定离线
+                // 50mils未收到遥控数据。判定离线
 //                printf("DBUS OFFLINE!\n");
                 memset(&YU_V_DBUS,0,sizeof (YU_V_DBUS));
             }
