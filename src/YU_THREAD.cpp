@@ -246,7 +246,7 @@ int8_t MOTOR_TYPE = 9;
 
 [[noreturn]] void YU_F_THREAD_EXIT(int signum)
 {
-    std::cout<<"程序开始退出！！"<<std::endl;
+    std::cout<<"\n程序开始退出！！"<<std::endl;
     memset(&YU_V_DBUS, 0, sizeof(YU_V_DBUS));
     std::cout<<"清空遥控数据"<<std::endl;
 
