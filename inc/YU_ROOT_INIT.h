@@ -20,7 +20,7 @@ typedef struct
     std::mutex MUTEX;
     std::condition_variable CV;
     std::atomic<bool> STATUS;
-    std::chrono::microseconds TIMEOUT;
+    std::chrono::milliseconds TIMEOUT;
 }YU_TYPEDEF_MONITOR_DBUS;
 
 

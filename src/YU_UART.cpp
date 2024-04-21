@@ -104,11 +104,10 @@
         {
             std::lock_guard<std::mutex> LOCK(YU_V_MONITOR_DBUS.MUTEX);
 
-            usleep(1);
             auto DATA_FLAG =  read(UART_FD, YU_V_DBUS_UNION.GET_DATA,sizeof (YU_V_DBUS_UNION.GET_DATA));
 
-//        if (DATA_FLAG > 0)
-//            printf("DATA FLAG: %ld\n",DATA_FLAG);
+        if (DATA_FLAG > 0)
+            YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_ONLINE;
 
             if (DATA_FLAG == 12)
             {
@@ -124,14 +123,14 @@
                 // 发射标志位
 //            YU_V_DBUS->L_FLAG = CORRECTION_ARRAY[CORRECTION_CHOSE_L][YU_V_DBUS->REMOTE.S1_u8 - 1];
 //            YU_V_DBUS->R_FLAG = CORRECTION_ARRAY[CORRENTION_CHOSE_R][YU_V_DBUS->REMOTE.S2_u8 - 1];
-                YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_ONLINE;
+//                YU_V_MONITOR_DBUS.STATUS = YU_D_MONITOR_ONLINE;
             }
         }
 
-        if (YU_V_DBUS->REMOTE.CH0_int16 <= 10 && YU_V_DBUS->REMOTE.CH0_int16 >= -10) YU_V_DBUS->REMOTE.CH0_int16 = 0;
-        if (YU_V_DBUS->REMOTE.CH1_int16 <= 10 && YU_V_DBUS->REMOTE.CH1_int16 >= -10) YU_V_DBUS->REMOTE.CH1_int16 = 0;
-        if (YU_V_DBUS->REMOTE.CH2_int16 <= 10 && YU_V_DBUS->REMOTE.CH2_int16 >= -10) YU_V_DBUS->REMOTE.CH2_int16 = 0;
-        if (YU_V_DBUS->REMOTE.CH3_int16 <= 10 && YU_V_DBUS->REMOTE.CH3_int16 >= -10) YU_V_DBUS->REMOTE.CH3_int16 = 0;
+//        if (YU_V_DBUS->REMOTE.CH0_int16 <= 10 && YU_V_DBUS->REMOTE.CH0_int16 >= -10) YU_V_DBUS->REMOTE.CH0_int16 = 0;
+//        if (YU_V_DBUS->REMOTE.CH1_int16 <= 10 && YU_V_DBUS->REMOTE.CH1_int16 >= -10) YU_V_DBUS->REMOTE.CH1_int16 = 0;
+//        if (YU_V_DBUS->REMOTE.CH2_int16 <= 10 && YU_V_DBUS->REMOTE.CH2_int16 >= -10) YU_V_DBUS->REMOTE.CH2_int16 = 0;
+//        if (YU_V_DBUS->REMOTE.CH3_int16 <= 10 && YU_V_DBUS->REMOTE.CH3_int16 >= -10) YU_V_DBUS->REMOTE.CH3_int16 = 0;
 
         YU_V_MONITOR_DBUS.CV.notify_one();
 
@@ -139,7 +138,7 @@
 //               YU_V_DBUS->REMOTE.CH0_int16, YU_V_DBUS->REMOTE.CH1_int16,
 //               YU_V_DBUS->REMOTE.CH2_int16, YU_V_DBUS->REMOTE.CH3_int16,
 //               YU_V_DBUS->REMOTE.S1_u8,     YU_V_DBUS->REMOTE.S2_u8);
-
+        usleep(10);
     }
 }
 

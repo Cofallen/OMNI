@@ -109,7 +109,7 @@ int8_t MOTOR_TYPE = 9;
             } else
             {
                 // 50ms未收到遥控数据。判定离线
-                printf("DBUS OFFLINE!\n");
+//                printf("DBUS OFFLINE!\n");
                 memset(&YU_V_DBUS,0,sizeof (YU_V_DBUS));
             }
 
@@ -252,14 +252,16 @@ int8_t MOTOR_TYPE = 9;
 
     for (auto &IT: YU_V_MOTOR_CHASSIS) {
         YU_T_PID_CLEAR(&IT);
+
     }
     for (auto &IT: YU_V_MOTOR_GIMBAL) {
         YU_T_PID_CLEAR(&IT);
     }
-    YU_F_CAN_SEND(YU_D_CAN_1, 0x200, 0, 0, 0, 0);
-    YU_F_CAN_SEND(YU_D_CAN_2, 0x2FF, 0, 0, 0, 0);
+
     std::cout<<"清空电机数据"<<std::endl;
+    std::cout<<"等待电机停转..."<<std::endl;
     sleep(2);
+
     std::cerr<<"程序退出"<<std::endl;
     exit(signum);
 
