@@ -1,0 +1,13 @@
+version: '3'
+services:
+  test:
+    build:
+      context: .
+    container_name: sky
+    restart: always
+    privileged: true
+    network_mode: host
+    devices:
+      - /dev/ttyTHS0:/dev/ttyTHS0
+    volumes:
+      - ./config.ini:/config.ini
