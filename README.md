@@ -34,37 +34,72 @@ sudo ifconfig can2 up
 
 - [ ] `Docker` 问题
 
-* 镜像太大，基于`ubuntu:20.04`，总内存达到了
+* `docker-compose up`运行时会自动退出代码，运行不完整，但在`omni-test`镜像下通过`docker run -it --name sky omni-test`
+产生的`sky`容器却运行完整.
+
+对比：`docker-compose up`
+
+```shell
+root@Cofallen:~/Nx/OMNI# docker-compose up
+[+] Running 1/0
+ ✔ Container sky  Created                                                                                          0.0s
+Attaching to sky
+sky  | Please check if CAN1 EXISTS
+sky  | : No such device
+sky  | CAN1 bind error
+sky  | : Bad file descriptor
+sky  | Please check if CAN2 EXISTS
+sky  | : No such device
+sky  | CAN2 bind error
+sky  | : Bad file descriptor
+^CGracefully stopping... (press Ctrl+C again to force)
+Aborting on container exit...
+[+] Stopping 1/1
+ ✔ Container sky  Stopped                                                                                         10.1s
+canceled
+```
+
+`docker run`
+
+```shell
+root@Cofallen:~/Nx/OMNI# docker run -it --name sky omni-test
+开始CAN初始化......
+CAN FD build OK
+Please check if CAN1 EXISTS
+: No such device
+CAN1 bind error
+: Bad file descriptor
+CAN FD build OK
+Please check if CAN2 EXISTS
+: No such device
+CAN2 bind error
+: Bad file descriptor
+Interface: lo    Address: 127.0.0.1
+Interface: eth0  Address: 172.18.0.2
+^C
+程序开始退出！！
+清空遥控数据
+清空电机数据
+程序退出
+```
+
+* 镜像太大，基于`ubuntu:20.04`，总内存达到了 (已解决)
 
 ```shell
 REPOSITORY   TAG       IMAGE ID       CREATED         SIZE
 omni         latest    133b659089e7   4 minutes ago   366MB
 ```
 
-* 镜像构建时间过长：(待查看)
+* 镜像构建时间过长：~~*(待查看)*~~ (已解决)
+
+可以看到是`cmake`有关工具下载时间过长，虚拟机可仅用来运行代码，不需要编译
 
 ```shell
-[+] Building 72.1s (11/11) FINISHED                                                                                                         docker:default
- => [internal] load build definition from Dockerfile                                                                                        0.0s
- => => transferring dockerfile: 214B                                                                                                        0.0s
- => [internal] load metadata for docker.io/library/ubuntu:20.04                                                                             1.9s
- => [internal] load .dockerignore                                                                                                           0.0s
- => => transferring context: 2B                                                                                                             0.0s
- => [1/6] FROM docker.io/library/ubuntu:20.04@sha256:71b82b8e734f5cd0b3533a16f40ca1271f28d87343972bb4cd6bd6c38f1bd38e                       0.0s
- => [internal] load build context                                                                                                           0.0s
- => => transferring context: 6.28kB                                                                                                         0.0s
- => CACHED [2/6] WORKDIR /YU                                                                                                                0.0s
- => [3/6] COPY . .                                                                                                                          0.1s
- => [4/6] RUN chmod +x start.sh                                                                                                             0.2s
- => [5/6] RUN apt-get update && apt-get install -y gcc    cmake                                                                             66.7s
- => [6/6] RUN ./start.sh                                                                                                                    0.4s 
- => exporting to image                                                                                                                      2.7s
- => => exporting layers                                                                                                                     2.7s
- => => writing image sha256:133b659089e75a33ae8c09c40afdb680fa7e009c8dda6a6da12a48e0d40961cd                                                0.0s
- => => naming to docker.io/library/omni                                                                                                     0.0s
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+omni-test    latest    75f430bb570c   59 minutes ago   76.4MB
 ```
 
-* 目前未尝试阻塞
+* ~~*目前未尝试阻塞*~~ (已完成阻塞情况运行)
 
 
 ## TODO
