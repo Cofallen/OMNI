@@ -3,6 +3,10 @@ services:
   test:
     build:
       context: .
+      dockerfile: Dockerfile
+      args:
+        author: YU
+    image: test:0.1
     container_name: sky
     restart: always
     privileged: true
@@ -11,3 +15,5 @@ services:
       - /dev/ttyTHS0:/dev/ttyTHS0
     volumes:
       - ./config.ini:/config.ini
+    command: /bin/bash -c "./start.sh &&./build/debug/demo"
+    stdin_open: true

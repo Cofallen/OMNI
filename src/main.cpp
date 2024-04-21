@@ -25,18 +25,18 @@ int main()
 
     YU_F_CAN_INIT();
 
-//    thread T_UART(YU_F_DBUS_THREAD, &YU_V_DBUS);
+    thread T_UART(YU_F_DBUS_THREAD, &YU_V_DBUS);
 //    thread T_CHASSIS(YU_F_THREAD_CHASSIS_MECANUM);
-//    thread T_MONITOR(YU_F_THREAD_MONITOR);
-    thread T_VOFA(YU_F_THREAD_VOFA);
+    thread T_MONITOR(YU_F_THREAD_MONITOR);
+//    thread T_VOFA(YU_F_THREAD_VOFA);
 //    thread T_TEST(YU_F_THREAD_TEST);
 //    thread T_GIMBAL(YU_F_THREAD_GIMBAL);
 
 //    T_TEST.join();
 //    T_CHASSIS.join();
-//    T_UART.join();
-//    T_MONITOR.join();
-    T_VOFA.join();
+    T_UART.join();
+    T_MONITOR.join();
+//    T_VOFA.join();
 //    T_GIMBAL.join();
 
 }

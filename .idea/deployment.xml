@@ -20,27 +20,16 @@
           </excludedPaths>
         </serverdata>
       </paths>
-      <paths name="nnx (7c8257a8-f7e1-4e83-a383-5942caab89d6)">
+      <paths name="nnx (fa4bc2ff-c6b3-4d19-8683-2341fd324928)">
         <serverdata>
           <mappings>
             <mapping deploy="/home/nx/horizon/YU" local="$PROJECT_DIR$" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nx" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
             <excludedPath local="true" path="$PROJECT_DIR$/build/release" />
             <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nnx" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nnx" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/release" />
           </excludedPaths>
-        </serverdata>
-      </paths>
-      <paths name="nnx (fa4bc2ff-c6b3-4d19-8683-2341fd324928)">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/tmp/OMNI" local="$PROJECT_DIR$" />
-          </mappings>
         </serverdata>
       </paths>
       <paths name="nx (c991f88e-9db7-4063-a44d-88d97f83ce33)">
