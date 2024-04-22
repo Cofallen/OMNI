@@ -1,0 +1,22 @@
+; 路径 /etc/systemd/system/
+; 加载新systemd单元 systemctl daemon-reload
+; 启动功能 systemctl enable reboot.service
+[Unit]
+Description=Reboot Start Test
+After=network-online.target usb.target
+
+#[Service] # 开机连续自启
+#Type=simple
+##ExecStart=/bin/bash /home/nx/horizon/YU/start.sh
+#ExecStart=/bin/bash /root/Nx/OMNI/start.sh
+#Restart=always
+
+[Service] # 开机自启一次
+Type=oneshot
+RemainAfterExit=yes
+#ExecStart=/bin/bash /home/nx/horizon/YU/start.sh
+ExecStart=/bin/bash /root/Nx/OMNI/start.sh
+ExecStop=
+
+[Install]
+WantedBy=multi-user.target
