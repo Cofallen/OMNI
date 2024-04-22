@@ -119,6 +119,9 @@
 #define YU_D_LOCK_ON 0
 #define YU_D_LOCK_OFF 1
 
+#define YU_D_MOD_SINGLE 1
+#define YU_D_MOD_CONSIST 2
+#define YU_D_MOD_SHUT 3
 /**                       模式                           **/
 
 
