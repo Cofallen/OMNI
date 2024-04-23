@@ -15,5 +15,7 @@ services:
       - /dev/ttyTHS0:/dev/ttyTHS0
     volumes:
       - ./config.ini:/config.ini
-    command: /bin/bash -c "./start.sh &&./build/debug/demo"
+#    command: /bin/bash -c "./build/debug/demo"
+    command: /bin/bash -c "./build/debug-nnx/demo"
+#    command: /bin/bash -c "cd ./build/debug/ && make -j9 && cd - &&./build/debug/demo"
     stdin_open: true
