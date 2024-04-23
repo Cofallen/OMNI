@@ -52,7 +52,7 @@ float YU_F_ATTACK_FIRE_AIM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, uint8
     return 0.0f;
 }
 
-// 判断是否卡弹，获取拨弹目标值，要判断是否是连发
+// 判断是否卡弹，获取拨弹目标值，要判断是否是连发 没写完
 float YU_F_ATTACK_JAM(YU_TYPEDEF_MOTOR *MOTOR)
 {
     // 根据 超时时间，角度变化来确定卡弹，待测试     还是用flag来判断方向变化吧
@@ -106,7 +106,7 @@ float YU_F_ATTACK_JAM(YU_TYPEDEF_MOTOR *MOTOR)
         {
             YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = YU_F_ATTACK_JAM(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G]);
             TEMP = 1;
-        } else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_CONSIST && TEMP == 0) //连发
+        } else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_CONSIST && TEMP == 0) //连发  没写完
         {
             YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = YU_F_ATTACK_JAM(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G]);
             TEMP = 1;
