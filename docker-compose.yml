@@ -13,6 +13,7 @@ services:
     network_mode: host
     devices:
       - /dev/ttyTHS0:/dev/ttyTHS0
+      - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:
       - ./config.ini:/config.ini
 #    command: /bin/bash -c "./build/debug/demo"
