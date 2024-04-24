@@ -12,8 +12,8 @@
 #include "YU_PID.h"
 #include "YU_THREAD.h"
 
-#define YU_D_DIRECTION_PLUS 1      // positive
-#define YU_D_DIRECTION_MINUS 0     // negative
+#define YU_D_DIRC_POSITIVE 1      // positive
+#define YU_D_DIRC_NEGATIVE 0     // negative
 
 struct
 {
@@ -26,6 +26,8 @@ struct
 
     float SINGLE_ANGLE;          // 单发角度
     float SPEED;                 // 摩擦轮速度
+
+    int COUNT;
 } YU_V_MONITOR_ATTACK{ };
 
 YU_TYPEDEF_MOTOR YU_V_MOTOR_ATTACK[3]{ };
@@ -45,64 +47,63 @@ bool YU_F_ATTACK_INIT()
     return true;
 }
 
-// 通过裁判系统弹计速算摩擦轮目标值
-float YU_F_ATTACK_FIRE_AIM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, uint8_t VISION)
+// 获取拨弹目标值  // 需要上锁防止单发状态下目标值疯长
+float YU_F_ATTACK_JAM_AIM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS)
 {
-//    MOTOR->DATA.AIM =
-    return 0.0f;
+    int8_t LOCK = 0;
+    if (DBUS->REMOTE.S2_u8 == YU_D_MOD_CONSIST && LOCK == 0)
+    {
+//        YU_V_MONITOR_ATTACK.COUNT ++;             // 应是根据裁判系统热量获取目标值
+        YU_V_MONITOR_ATTACK.COUNT = 10;             // 先写10连发
+        LOCK = 1;
+    } else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SINGLE && LOCK == 0)
+    {
+        YU_V_MONITOR_ATTACK.COUNT = 1;
+        LOCK = 1;
+    } else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SHUT)
+    {
+        YU_V_MONITOR_ATTACK.COUNT = 0;
+        LOCK = 0;
+    }
+
+    MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM = (float)MOTOR[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE + YU_V_MONITOR_ATTACK.SINGLE_ANGLE * (float)YU_V_MONITOR_ATTACK.COUNT;
+    return MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM;
 }
 
 // 判断是否卡弹，获取拨弹目标值，要判断是否是连发 没写完
-float YU_F_ATTACK_JAM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS)
+/**
+ *
+ * @param MOTOR 一定是发射的数组名
+ * @param DBUS
+ * @return
+ */
+bool YU_F_ATTACK_JAM_CHECK(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS)
 {
-    // 根据 超时时间，角度变化来确定卡弹，待测试     还是用flag来判断方向变化吧
-    YU_V_MONITOR_ATTACK.G_ANGLE[YU_D_LAST] = YU_V_MONITOR_ATTACK.G_ANGLE[YU_D_NOW];
-    YU_V_MONITOR_ATTACK.G_ANGLE[YU_D_NOW]  = MOTOR->DATA.ANGLE_INFINITE;
+    // 根据 超时时间，角度变化来确定卡弹，待测试   // 不用flag，直接上，连续正反转
 
-    YU_V_MONITOR_ATTACK.G_ANGLE_ERROR = YU_V_MONITOR_ATTACK.G_ANGLE[YU_D_NOW] - YU_V_MONITOR_ATTACK.G_ANGLE[YU_D_LAST];
-
-    // 超时设置
+    // 超时设置 // 不能在这写。应是在拨弹can发送首位？
     auto TIME_START = std::chrono::steady_clock::now();
+    auto TIME_END   = std::chrono::steady_clock::now();
+    // 若卡弹，直接回到那个稳定角度，还卡，再回相反位置
 
-    YU_V_MONITOR_ATTACK.G_ANGLE[YU_D_LAST] = YU_V_MONITOR_ATTACK.G_ANGLE[YU_D_NOW];
-
-    if (YU_V_MONITOR_ATTACK.G_ANGLE_ERROR < 200)
+    float TEMP = MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM - (float)MOTOR[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE;
+    float EDGE = YU_V_MONITOR_ATTACK.SINGLE_ANGLE / 100.0f;                   // 这个比例系数是认为差多少比例到目标值
+    if (((TIME_END - TIME_START) > std::chrono::milliseconds(200)) && ((YU_D_MATH_ABS(TEMP)) >= EDGE) )
     {
-        // 异常处理 倒转
-        YU_V_MONITOR_ATTACK.FLAG = YU_D_DIRECTION_PLUS;
-    } else if (YU_V_MONITOR_ATTACK.G_ANGLE_ERROR > -200)
-    {
-        YU_V_MONITOR_ATTACK.FLAG = YU_D_DIRECTION_MINUS;
+        // 认为卡弹
+        YU_V_MONITOR_ATTACK.FLAG = YU_D_DIRC_NEGATIVE;
+        YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = -(0.0f); //TODO
+        return false;
     }
-
-    // 需要计算卡弹后到底转多少度，还是积累着来，最后搞一次
-
-    // 假设已经判断好是否卡弹，并且已算好目标值
-    // 想了想，继续分三种
-    int TEMP = 0;
-    int COUNT = 10;
-    if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SINGLE && TEMP == 0)
+    else
     {
-        TEMP = 1;
-        if (YU_V_MONITOR_ATTACK.FLAG == YU_D_DIRECTION_PLUS) return YU_V_MONITOR_ATTACK.SINGLE_ANGLE;
-        else if (YU_V_MONITOR_ATTACK.FLAG == YU_D_DIRECTION_MINUS) return YU_V_MONITOR_ATTACK.SINGLE_ANGLE;
+        //
     }
-    else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_CONSIST && TEMP == 0)
-    {
-        // 一直发，保持稳定频率 // 没有卡弹监测
-        TEMP = 1;
-        return YU_V_MONITOR_ATTACK.SINGLE_ANGLE * (float)COUNT;
-    }
-    else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SHUT)
-    {
-        TEMP = 0;
-        return 0.0f;
-    }
-    return YU_V_MONITOR_ATTACK.SINGLE_ANGLE;
+    return true;
 }
 
-// 先把发射当成一个线程来写，后面考虑合并到云台上
-[[noreturn]] void YU_F_ATTACK(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS, int8_t VISION_TYPE)
+// 先把发射当成一个线程来写，后面考虑合并到云台上  // 所以函数内不需传参
+[[noreturn]] void YU_F_THREAD_ATTACK()
 {
     static bool INIT= false;
     if (!INIT)
@@ -113,7 +114,7 @@ float YU_F_ATTACK_JAM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS)
     // 摩擦轮发射目标值
     YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_L].DATA.AIM = -YU_V_MONITOR_ATTACK.SPEED;
     YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_R].DATA.AIM =  YU_V_MONITOR_ATTACK.SPEED;
-    YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = YU_F_ATTACK_JAM(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G],DBUS);
+    YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = YU_F_ATTACK_JAM_AIM(YU_V_MOTOR_ATTACK,&YU_V_DBUS);
 
     int TEMP = 0;  // 用作辅助判断,实现单发一次
     while (true)
@@ -122,15 +123,15 @@ float YU_F_ATTACK_JAM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS)
         YU_F_CAN_RECV(YU_V_MOTOR_ATTACK, &YU_V_TOP_DATA ,YU_D_CAN_2);
 
         // 单发,连发,不发 控制 左拨杆
-        if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SINGLE && TEMP == 0) // 单发
+        if (YU_V_DBUS.REMOTE.S2_u8 == YU_D_MOD_SINGLE && TEMP == 0) // 单发
         {
-            YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = YU_F_ATTACK_JAM(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G],&YU_V_DBUS);
+            YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = YU_F_ATTACK_JAM_AIM(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G],&YU_V_DBUS);
             TEMP = 1;
-        } else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_CONSIST && TEMP == 0) //连发  没写完
+        } else if (YU_V_DBUS.REMOTE.S2_u8 == YU_D_MOD_CONSIST && TEMP == 0) //连发  没写完
         {
-            YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = YU_F_ATTACK_JAM(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G],&YU_V_DBUS);
+            YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = YU_F_ATTACK_JAM_AIM(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G],&YU_V_DBUS);
             TEMP = 1;
-        } else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SHUT) // 停止
+        } else if (YU_V_DBUS.REMOTE.S2_u8 == YU_D_MOD_SHUT) // 停止
         {
             YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_L].DATA.AIM = 0;
             YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_R].DATA.AIM = 0;
