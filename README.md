@@ -125,6 +125,7 @@ omni-test    latest    75f430bb570c   59 minutes ago   76.4MB
   - [x] 多线程锁监测遥控离线
   - [ ] CMake,gitignore的的高级运用
   - [ ] `docker`镜像下运行代码,使用`start.sh`
+  - [ ] 将大多全局变量转化，精简代码 (或许可以考虑static/class?)
 - [x] 剩余代码任务
   - [x] UART遥控解算
   - [x] 写地盘
