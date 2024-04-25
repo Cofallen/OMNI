@@ -2,6 +2,7 @@
 #include "YU_MOTOR.h"
 #include "YU_PID.h"
 #include "YU_VOFA.h"
+#include "YU_ATTACK.h"
 
 #include <unordered_map>
 
@@ -34,10 +35,10 @@ void YU_F_VOFA_PARSE(YU_TYPEDEF_RECV_UNION *RECV)
  * @author YU
  * @date 2024-03-21
  */
-void YU_F_VOFA_DEBUG_CAL(YU_TYPEDEF_DEBUG *DEBUG, YU_TYPEDEF_MOTOR *MOTOR)
+static void YU_F_VOFA_DEBUG_CAL(YU_TYPEDEF_DEBUG *DEBUG, YU_TYPEDEF_MOTOR *MOTOR)
 {
     DEBUG->MOTOR_DATA.AIM = MOTOR->DATA.AIM;
-    if (MOTOR == &YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW])
+    if (MOTOR == &YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW] || MOTOR == &YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G])
         DEBUG->MOTOR_DATA.ANGLE = MOTOR->DATA.ANGLE_INFINITE;
     else
         DEBUG->MOTOR_DATA.ANGLE = MOTOR->DATA.ANGLE_NOW;
@@ -104,6 +105,12 @@ void YU_F_VOFA_DEBUG()
             break;
         case YU_D_VOFA_GP: YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[YU_D_VOFA_GP], &YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_PIT]);
             break;
+        case YU_D_VOFA_GL: YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[YU_D_VOFA_GL], &YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_L]);
+            break;
+        case YU_D_VOFA_GR: YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[YU_D_VOFA_GR], &YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_R]);
+            break;
+        case YU_D_VOFA_GG: YU_F_VOFA_DEBUG_CAL(&YU_V_DEBUG[YU_D_VOFA_GG], &YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G]);
+            break;
         default:
             break;
     }
@@ -140,14 +147,17 @@ void YU_F_VOFA_ASSIGN(YU_TYPEDEF_RECV_UNION *RECV)
     auto HEAD = OUTLINE.substr(0, POS_1);  //   C1_S_P
     auto TAIL = OUTLINE.substr(POS_1+1);
 
-    // C1 C2 C3 C4 GY GP  // A S C  // P I D ILIT ALIT
+    // C1 C2 C3 C4 GY GP  GL GR GG  // A S C  // P I D ILIT ALIT
     static const std::unordered_map<std::string, int> MOTOR_MAP{
             {"C1", YU_D_VOFA_C1},
             {"C2", YU_D_VOFA_C2},
             {"C3", YU_D_VOFA_C3},
             {"C4", YU_D_VOFA_C4},
             {"GY", YU_D_VOFA_GY},
-            {"GP", YU_D_VOFA_GP}
+            {"GP", YU_D_VOFA_GP},
+            {"GL", YU_D_VOFA_GL},
+            {"GR", YU_D_VOFA_GR},
+            {"GG", YU_D_VOFA_GG},
     };
     auto IT_HEAD = MOTOR_MAP.find(HEAD);
     if (IT_HEAD != MOTOR_MAP.end())
@@ -183,6 +193,12 @@ void YU_F_VOFA_ASSIGN(YU_TYPEDEF_RECV_UNION *RECV)
             case YU_D_VOFA_GY: IT_TAIL->second(&YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_YAW], RECV->DATA.PARAM);
                 break;
             case YU_D_VOFA_GP: IT_TAIL->second(&YU_V_MOTOR_GIMBAL[YU_D_MOTOR_GIMBAL_PIT], RECV->DATA.PARAM);
+                break;
+            case YU_D_VOFA_GL: IT_TAIL->second(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_L], RECV->DATA.PARAM);
+                break;
+            case YU_D_VOFA_GR: IT_TAIL->second(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_R], RECV->DATA.PARAM);
+                break;
+            case YU_D_VOFA_GG: IT_TAIL->second(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G], RECV->DATA.PARAM);
                 break;
             case 9:    // 空
                 break;
