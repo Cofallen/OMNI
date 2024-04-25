@@ -77,7 +77,7 @@ int8_t MOTOR_TYPE = 9;
 
 [[noreturn]] void YU_F_THREAD_MONITOR()
 {
-    YU_V_MONITOR_DBUS.TIMEOUT = std::chrono::milliseconds(50);  // 最大超时时间50mils
+    YU_V_MONITOR_DBUS.TIMEOUT = std::chrono::milliseconds(100);  // 最大超时时间50mils
     YU_V_MONITOR_DBUS.STATUS  = YU_D_MONITOR_OFFLINE;
 
     while (true)
