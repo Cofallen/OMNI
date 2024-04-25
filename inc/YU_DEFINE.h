@@ -131,8 +131,12 @@
 #define YU_D_VOFA_C3 2
 #define YU_D_VOFA_C4 3
 
-#define YU_D_VOFA_GY 5
-#define YU_D_VOFA_GP 6
+#define YU_D_VOFA_GY 4
+#define YU_D_VOFA_GP 5
+
+#define YU_D_VOFA_GL 6
+#define YU_D_VOFA_GR 7
+#define YU_D_VOFA_GG 8
 
 /**                         VOFA NAME                      **/
 
