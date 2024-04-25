@@ -126,6 +126,7 @@ omni-test    latest    75f430bb570c   59 minutes ago   76.4MB
   - [ ] CMake,gitignore的的高级运用
   - [ ] `docker`镜像下运行代码,使用`start.sh`
   - [ ] 将大多全局变量转化，精简代码 (或许可以考虑static/class?)
+  - [ ] `VOFA`中获取`debug`电机类型或许可以用列表迭代器？优化？
 - [x] 剩余代码任务
   - [x] UART遥控解算
   - [x] 写地盘
