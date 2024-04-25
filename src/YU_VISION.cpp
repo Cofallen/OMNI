@@ -43,24 +43,25 @@ YU_TYPEDEF_VISION YU_V_VISION;
             close(SOCKET_FD);
         }
 
-        if (accept(SOCKET_FD, (struct sockaddr *)&CLIENT_ADDR, &CLIENT_ADDR_LEN) < 0)
-        {
-            perror("视觉 accept 失败\n");
-            printf("尝试重连......\n");
-        }
-
         // 接收，发送
-        if (recv(SOCKET_FD, &VISION->RECV, sizeof(VISION->RECV.ALL), 0) < 0)
+        while (accept(SOCKET_FD,(struct sockaddr *)&CLIENT_ADDR,&CLIENT_ADDR_LEN) >= 0)
         {
-            perror("从视觉 recv 失败\n");
-            close(SOCKET_FD);
-            printf("尝试重连......\n");
-        }
-        if (send(SOCKET_FD, &VISION->SEND, sizeof(VISION->SEND.ALL), 0) < 0)
-        {
-            perror("从视觉 send 失败\n");
+            if (recv(SOCKET_FD, &VISION->RECV, sizeof(VISION->RECV.ALL), 0) < 0)
+            {
+                perror("从视觉 recv 失败\n");
+                break;
+            }
+            if (send(SOCKET_FD, &VISION->SEND, sizeof(VISION->SEND.ALL), 0) < 0)
+            {
+                perror("从视觉 send 失败\n");
+                break;
+            }
+            usleep(1);
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));  // 延时0.2s
+        perror("视觉 accept 失败\n");
+        close(SOCKET_FD);
+        printf("尝试重连......\n");
+        std::this_thread::sleep_for(std::chrono::milliseconds(2000));  // 延时2s
     }
 }
