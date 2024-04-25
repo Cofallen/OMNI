@@ -68,7 +68,7 @@ union YU_TYPEDEF_DBUS_UNION // 使用共用体整合数据
 
         // 遥控滑轮
         uint64_t DIR: 11;
-        uint64_t : 0;
+        uint64_t : 5;
     } DATA_NEATEN;
     // 接收到的数组
     uint8_t GET_DATA[19];
