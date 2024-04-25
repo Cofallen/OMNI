@@ -14,6 +14,7 @@
 #include "YU_TOP.h"
 #include "YU_THREAD.h"
 #include "YU_VISION.h"
+#include "YU_ATTACK.h"
 
 using namespace std;
 
@@ -31,14 +32,17 @@ int main()
     thread T_MONITOR(YU_F_THREAD_MONITOR);
 //    thread T_VOFA(YU_F_THREAD_VOFA);
 //    thread T_TEST(YU_F_THREAD_TEST);
-    thread T_GIMBAL(YU_F_THREAD_GIMBAL);
-    thread T_VISION(YU_F_THREAD_VISION, &YU_V_VISION);
+//    thread T_GIMBAL(YU_F_THREAD_GIMBAL);
+//    thread T_VISION(YU_F_THREAD_VISION, &YU_V_VISION);
+    thread T_ATTACK(YU_F_THREAD_ATTACK);
+
 //    T_TEST.join();
 //    T_CHASSIS.join();
     T_UART.join();
     T_MONITOR.join();
 //    T_VOFA.join();
-    T_GIMBAL.join();
-    T_VISION.join();
+//    T_GIMBAL.join();
+//    T_VISION.join();
+    T_ATTACK.join();
 
 }

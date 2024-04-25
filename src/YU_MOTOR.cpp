@@ -36,9 +36,6 @@ void YU_F_MOTOR_CAN_CAL(YU_TYPEDEF_MOTOR *MOTOR,const uint8_t *CAN_DATA,uint8_t 
             break;
 
         case YU_D_MOTOR_TYPE_2006:
-        {
-        }
-            break;
 
         // 瑞的没看明白，先自己写
         case YU_D_MOTOR_TYPE_6020:

@@ -67,9 +67,9 @@
 #define YU_D_CAN_ID_YAW         0x20B
 #define YU_D_CAN_ID_PIT         0x209
 //发射
-#define YU_D_CAN_ID_ATTACK_L    0x203
-#define YU_D_CAN_ID_ATTACK_R    0x204
-#define YU_D_CAN_ID_ATTACK_G    0x205
+#define YU_D_CAN_ID_ATTACK_L    0x208
+#define YU_D_CAN_ID_ATTACK_R    0x207
+#define YU_D_CAN_ID_ATTACK_G    0x203
 /******************************CAN_ID********************************/
 
 
@@ -119,8 +119,8 @@
 #define YU_D_LOCK_ON 0
 #define YU_D_LOCK_OFF 1
 
-#define YU_D_MOD_SINGLE 1
-#define YU_D_MOD_CONSIST 2
+#define YU_D_MOD_SINGLE 2
+#define YU_D_MOD_CONSIST 1
 #define YU_D_MOD_SHUT 3
 /**                       模式                           **/
 
