@@ -29,3 +29,4 @@ services:
     restart: always
     privileged: true
     network_mode: host
+
