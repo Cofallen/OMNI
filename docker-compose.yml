@@ -20,3 +20,12 @@ services:
     command: /bin/bash -c "./build/debug-nnx/demo"
 #    command: /bin/bash -c "cd ./build/debug/ && make -j9 && cd - &&./build/debug/demo"
     stdin_open: true
+  cmake:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cmake:0.1
+    container_name: cmake_version
+    restart: always
+    privileged: true
+    network_mode: host
