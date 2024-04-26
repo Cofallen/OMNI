@@ -10,6 +10,7 @@
 #include "YU_PID.h"
 #include "YU_THREAD.h"
 
+#define YU_D_TIMEOUT 20000
 
 struct
 {
@@ -30,8 +31,8 @@ bool YU_F_ATTACK_INIT()
     YU_V_ATTACK_PARAM.SINGLE_ANGLE = -36864.0f;
     YU_V_ATTACK_PARAM.SPEED = 3000.0f;
     // 拨弹双环pid
-    const float PID_ATTACK_G_A[5] = {5,0,0,50,500};
-    const float PID_ATTACK_G_S[5] = {5,0,0,500,1000};
+    const float PID_ATTACK_G_A[5] = {4.6f,0,35.8f,0,3100};
+    const float PID_ATTACK_G_S[5] = {5.4f,0,10.0f,500.0f,21942};
     YU_T_PID_INIT(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].PID_A, PID_ATTACK_G_A);
     YU_T_PID_INIT(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].PID_S, PID_ATTACK_G_S);
 
@@ -53,7 +54,7 @@ float YU_F_ATTACK_JAM_AIM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS)
         if (DBUS->REMOTE.S2_u8 == YU_D_MOD_CONSIST)
         {
 //        YU_V_MONITOR_ATTACK.COUNT ++;             // 应是根据裁判系统热量获取目标值
-            YU_V_ATTACK_PARAM.COUNT = 10;             // 先写10连发
+            YU_V_ATTACK_PARAM.COUNT = 5;             // 先写10连发
             LOCK = 1;
         } else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SINGLE)
         {
@@ -90,10 +91,10 @@ bool YU_F_ATTACK_JAM_CHECK(YU_TYPEDEF_MOTOR *MOTOR)
 
     // 若卡弹，直接回到那个稳定角度，还卡，再回相反位置
     float TEMP = MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM - (float)MOTOR[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE;
-    float EDGE = YU_D_MATH_ABS((YU_V_ATTACK_PARAM.SINGLE_ANGLE / 30.0f));                   // 这个比例系数是认为差多少比例到目标值
+    float EDGE = YU_D_MATH_ABS((YU_V_ATTACK_PARAM.SINGLE_ANGLE / 100.0f));                   // 这个比例系数是认为差多少比例到目标值
     if ((YU_D_MATH_ABS(TEMP)) >= EDGE)  // 是否到达边缘监测
     {
-        if (YU_V_ATTACK_PARAM.TIME >= 20000)    // 不知道循环时间，随便给的，待测试
+        if (YU_V_ATTACK_PARAM.TIME >= YU_D_TIMEOUT)    // 不知道循环时间，随便给的，待测试
         {
             // 认为卡弹
 //            YU_V_MONITOR_ATTACK.FLAG = (int8_t)(-YU_V_MONITOR_ATTACK.FLAG);
@@ -136,15 +137,16 @@ bool YU_F_ATTACK_JAM_CHECK(YU_TYPEDEF_MOTOR *MOTOR)
         if (!YU_F_ATTACK_JAM_CHECK(YU_V_MOTOR_ATTACK))
         {
             // 卡弹
-            if (YU_V_ATTACK_PARAM.TIME == 20000)   // 标记，看看能否实现卡弹前后转动
+            if (YU_V_ATTACK_PARAM.TIME == YU_D_TIMEOUT)   // 标记，看看能否实现卡弹前后转动
                 YU_V_ATTACK_PARAM.FLAG = (int8_t)(-YU_V_ATTACK_PARAM.FLAG);
-            if (YU_V_DBUS.REMOTE.S2_u8 == YU_D_MOD_SHUT)  // 强行终止，归0
+
+            YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = (float)YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE + YU_V_ATTACK_PARAM.SINGLE_ANGLE * static_cast<float>(YU_V_ATTACK_PARAM.FLAG);if (YU_V_DBUS.REMOTE.S2_u8 == YU_D_MOD_SHUT)  // 强行终止，归0
             {
                 YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = (float)YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE;
-                YU_V_ATTACK_PARAM.TIME = 0;
+
             }
-            YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = (float)YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE + YU_V_ATTACK_PARAM.SINGLE_ANGLE * static_cast<float>(YU_V_ATTACK_PARAM.FLAG);
-            YU_V_ATTACK_PARAM.TIME = 0;
+
+            YU_V_ATTACK_PARAM.TIME = 0;  // 卡弹后时间归0，等待下次是否卡弹
         }else
         {
             // 根据遥控模式获取当前拨弹电机目标值  // 思考下，连续拨弹中速度不稳定问题 // 这个直接条pid 速度环给稳了估计就行
@@ -159,9 +161,9 @@ bool YU_F_ATTACK_JAM_CHECK(YU_TYPEDEF_MOTOR *MOTOR)
         YU_T_PID_CAL(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].PID_A,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM,(float)YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE);
         YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.CAN_SEND = (int16_t)YU_T_PID_CAL(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].PID_S,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].PID_A.OUT.ALL_OUT,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.SPEED_NOW);
 
-//        YU_F_CAN_SEND(YU_D_CAN_2,0x200,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_L].DATA.CAN_SEND,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_R].DATA.CAN_SEND,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.CAN_SEND,0);
+        YU_F_CAN_SEND(YU_D_CAN_2,0x200,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_L].DATA.CAN_SEND,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_R].DATA.CAN_SEND,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.CAN_SEND,0);
 //        printf("%hd\n",YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.CAN_SEND);
-        printf("ANGLE:  %d  MOD:  %d   TIME:  %d  AIM  %.2f\n",YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE,YU_V_DBUS.REMOTE.S2_u8,YU_V_ATTACK_PARAM.TIME,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM);
+//        printf("ANGLE:  %d  MOD:  %d   TIME:  %d  AIM  %.2f\n",YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE,YU_V_DBUS.REMOTE.S2_u8,YU_V_ATTACK_PARAM.TIME,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM);
     }
 
 
