@@ -64,7 +64,6 @@ extern YU_TYPEDEF_DEBUG YU_V_DEBUG[10];
 extern int8_t MOTOR_TYPE;
 
 [[noreturn]] void YU_F_THREAD_CHASSIS_MECANUM();
-[[noreturn]] void YU_F_THREAD_TEST();
 [[noreturn]] void YU_F_THREAD_MONITOR();
 [[noreturn]] void YU_F_THREAD_GIMBAL();
 [[noreturn]] void YU_F_THREAD_VOFA();
