@@ -31,7 +31,6 @@ int main()
 //    thread T_CHASSIS(YU_F_THREAD_CHASSIS_MECANUM);
     thread T_MONITOR(YU_F_THREAD_MONITOR);
     thread T_VOFA(YU_F_THREAD_VOFA);
-//    thread T_TEST(YU_F_THREAD_TEST);
 //    thread T_GIMBAL(YU_F_THREAD_GIMBAL);
 //    thread T_VISION(YU_F_THREAD_VISION, &YU_V_VISION);
     thread T_ATTACK(YU_F_THREAD_ATTACK);
@@ -45,4 +44,9 @@ int main()
 //    T_VISION.join();
     T_ATTACK.join();
 
+//    cpu_set_t CPU_0;
+//    CPU_ZERO(&CPU_0);
+//    CPU_SET(0,&CPU_0);
+//    pthread_setaffinity_np(T_UART.native_handle(),sizeof(cpu_set_t),&CPU_0);
+//    pthread_setaffinity_np(T_MONITOR.native_handle(),sizeof(cpu_set_t),&CPU_0);
 }
