@@ -28,11 +28,11 @@ bool YU_F_ATTACK_INIT()
     YU_V_ATTACK_PARAM.TIME = 0;
     YU_V_ATTACK_PARAM.FLAG = 1;  // 默认卡弹后取负反转
     // 数据初始化
-    YU_V_ATTACK_PARAM.SINGLE_ANGLE = -36864.0f;
+    YU_V_ATTACK_PARAM.SINGLE_ANGLE = 36864.0f;
     YU_V_ATTACK_PARAM.SPEED = 3000.0f;
     // 拨弹双环pid
-    const float PID_ATTACK_G_A[5] = {4.6f,0,35.8f,0,3100};
-    const float PID_ATTACK_G_S[5] = {5.4f,0,10.0f,500.0f,21942};
+    const float PID_ATTACK_G_A[5] = {4.1f,0,37.6f,0,3100};
+    const float PID_ATTACK_G_S[5] = {5.2f,0,14.2f,500.0f,21942};
     YU_T_PID_INIT(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].PID_A, PID_ATTACK_G_A);
     YU_T_PID_INIT(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].PID_S, PID_ATTACK_G_S);
 
@@ -54,7 +54,7 @@ float YU_F_ATTACK_JAM_AIM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS)
         if (DBUS->REMOTE.S2_u8 == YU_D_MOD_CONSIST)
         {
 //        YU_V_MONITOR_ATTACK.COUNT ++;             // 应是根据裁判系统热量获取目标值
-            YU_V_ATTACK_PARAM.COUNT = 5;             // 先写10连发
+            YU_V_ATTACK_PARAM.COUNT = 100;             // 先写10连发
             LOCK = 1;
         } else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SINGLE)
         {
