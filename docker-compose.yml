@@ -29,4 +29,10 @@ services:
     restart: always
     privileged: true
     network_mode: host
-
+    devices:
+      - /dev/ttyTHS0:/dev/ttyTHS0
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    volumes:
+      - ./config.ini:/config.ini
+    command: /bin/bash -c "apt-install -y cmake &&./build/debug-nnx/demo"
+    stdin_open: true
