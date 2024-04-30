@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="Remote Host (34d8911b-8d8e-48b3-8fa4-97135e88d0d7)" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" confirmBeforeDeletion="false">
+  <component name="PublishConfigData" serverName="NX" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" confirmBeforeDeletion="false">
     <option name="confirmBeforeDeletion" value="false" />
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
@@ -9,15 +9,6 @@
           <mappings>
             <mapping deploy="/Nx/OMNI" local="$PROJECT_DIR$" />
           </mappings>
-          <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nx" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/release" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nnx" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nnx" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/release" />
-          </excludedPaths>
         </serverdata>
       </paths>
       <paths name="nnx (fa4bc2ff-c6b3-4d19-8683-2341fd324928)">
@@ -25,27 +16,19 @@
           <mappings>
             <mapping deploy="/home/nx/horizon/YU" local="$PROJECT_DIR$" />
           </mappings>
-          <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/release" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nnx" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/debug-nnx" />
-            <excludedPath local="true" path="$PROJECT_DIR$/build/release" />
-          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="nx">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/nx/horizon/YU" local="$PROJECT_DIR$" web="/" />
+          </mappings>
         </serverdata>
       </paths>
       <paths name="nx (c991f88e-9db7-4063-a44d-88d97f83ce33)">
         <serverdata>
           <mappings>
             <mapping deploy="/tmp/tmp.qxkjAg51BU" local="$PROJECT_DIR$" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="全全">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>

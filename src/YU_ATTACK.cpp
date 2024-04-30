@@ -10,8 +10,9 @@
 #include "YU_PID.h"
 #include "YU_THREAD.h"
 
-#define YU_D_TIMEOUT 20000
-
+// 超时时间应与拨弹量有关
+#define YU_D_TIMEOUT 3000
+#define YU_D_SPEEDOUT 80
 struct
 {
     int32_t TIME;
@@ -20,19 +21,20 @@ struct
     float SPEED;                 // 摩擦轮速度
     int COUNT;
 } YU_V_ATTACK_PARAM{ };
+int8_t LOCK = 0;
 
 YU_TYPEDEF_MOTOR YU_V_MOTOR_ATTACK[3]{ };
 
 bool YU_F_ATTACK_INIT()
 {
     YU_V_ATTACK_PARAM.TIME = 0;
-    YU_V_ATTACK_PARAM.FLAG = 1;  // 默认卡弹后取负反转
+    YU_V_ATTACK_PARAM.FLAG = 0;
     // 数据初始化
     YU_V_ATTACK_PARAM.SINGLE_ANGLE = 36864.0f;
     YU_V_ATTACK_PARAM.SPEED = 3000.0f;
     // 拨弹双环pid
-    const float PID_ATTACK_G_A[5] = {4.1f,0,37.6f,0,3100};
-    const float PID_ATTACK_G_S[5] = {5.2f,0,14.2f,500.0f,21942};
+    const float PID_ATTACK_G_A[5] = {0.08f,0.0001f,0.4f,103,4352};
+    const float PID_ATTACK_G_S[5] = {1.0f,0,2.4f,500.0f,7892};
     YU_T_PID_INIT(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].PID_A, PID_ATTACK_G_A);
     YU_T_PID_INIT(&YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].PID_S, PID_ATTACK_G_S);
 
@@ -48,31 +50,35 @@ bool YU_F_ATTACK_INIT()
 // 获取拨弹目标值  // 需要上锁防止单发状态下目标值疯长
 float YU_F_ATTACK_JAM_AIM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS)
 {
-    static int8_t LOCK = 0;
+
+    if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SHUT)
+    {
+        LOCK = 0;
+        YU_V_ATTACK_PARAM.COUNT = 0;    // 防止多次调用，使目标值快速增长
+    }
+    if (YU_V_ATTACK_PARAM.FLAG == 1)
+        return MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM;
     if (LOCK == 0)
     {
         if (DBUS->REMOTE.S2_u8 == YU_D_MOD_CONSIST)
         {
 //        YU_V_MONITOR_ATTACK.COUNT ++;             // 应是根据裁判系统热量获取目标值
-            YU_V_ATTACK_PARAM.COUNT = 100;             // 先写10连发
-            LOCK = 1;
+            YU_V_ATTACK_PARAM.COUNT = 1;             // 先写10连发
+//            LOCK = 1;
         } else if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SINGLE)
         {
             YU_V_ATTACK_PARAM.COUNT = 1;
             LOCK = 1;
         }
-        YU_V_ATTACK_PARAM.TIME = 0;
-        MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM = (float)MOTOR[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE + YU_V_ATTACK_PARAM.SINGLE_ANGLE * (float)YU_V_ATTACK_PARAM.COUNT;
+//        YU_V_ATTACK_PARAM.TIME = 0;     // 标记，忘了为什么加这个，删了
 
     } else if (LOCK == 1)
     {
-        YU_V_ATTACK_PARAM.COUNT = 0;    // 防止多次调用，使目标值快速增长
-        if (DBUS->REMOTE.S2_u8 == YU_D_MOD_SHUT)
-        {
-            LOCK = 0;
-        }
         // 不调用aim，使aim保持第一个信号时目标值
+        return MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM;
     }
+
+    MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM = (float)MOTOR[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE + YU_V_ATTACK_PARAM.SINGLE_ANGLE * (float)YU_V_ATTACK_PARAM.COUNT;
 
     return MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM;
 }
@@ -92,8 +98,13 @@ bool YU_F_ATTACK_JAM_CHECK(YU_TYPEDEF_MOTOR *MOTOR)
     // 若卡弹，直接回到那个稳定角度，还卡，再回相反位置
     float TEMP = MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM - (float)MOTOR[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE;
     float EDGE = YU_D_MATH_ABS((YU_V_ATTACK_PARAM.SINGLE_ANGLE / 100.0f));                   // 这个比例系数是认为差多少比例到目标值
-    if ((YU_D_MATH_ABS(TEMP)) >= EDGE)  // 是否到达边缘监测
+    if ((YU_D_MATH_ABS(TEMP)) <= EDGE)
     {
+        YU_V_ATTACK_PARAM.FLAG = 0;
+    }
+    if (((YU_D_MATH_ABS(TEMP)) >= EDGE) && ((YU_D_MATH_ABS(MOTOR[YU_D_MOTOR_ATTACK_G].DATA.SPEED_NOW)) <= YU_D_SPEEDOUT))  // 是否到达边缘监测
+    {
+
         if (YU_V_ATTACK_PARAM.TIME >= YU_D_TIMEOUT)    // 不知道循环时间，随便给的，待测试
         {
             // 认为卡弹
@@ -107,7 +118,7 @@ bool YU_F_ATTACK_JAM_CHECK(YU_TYPEDEF_MOTOR *MOTOR)
             return true;
         }
     }
-    else
+    else if (YU_V_ATTACK_PARAM.FLAG == 0)
     {
         // 认为转到对应位置
         YU_V_ATTACK_PARAM.TIME = 0;
@@ -137,16 +148,16 @@ bool YU_F_ATTACK_JAM_CHECK(YU_TYPEDEF_MOTOR *MOTOR)
         if (!YU_F_ATTACK_JAM_CHECK(YU_V_MOTOR_ATTACK))
         {
             // 卡弹
-            if (YU_V_ATTACK_PARAM.TIME == YU_D_TIMEOUT)   // 标记，看看能否实现卡弹前后转动
-                YU_V_ATTACK_PARAM.FLAG = (int8_t)(-YU_V_ATTACK_PARAM.FLAG);
+            YU_V_ATTACK_PARAM.FLAG = 1;
 
-            YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = (float)YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE + YU_V_ATTACK_PARAM.SINGLE_ANGLE * static_cast<float>(YU_V_ATTACK_PARAM.FLAG);if (YU_V_DBUS.REMOTE.S2_u8 == YU_D_MOD_SHUT)  // 强行终止，归0
+            YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = (float)YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE - YU_V_ATTACK_PARAM.SINGLE_ANGLE;
+            if (YU_V_DBUS.REMOTE.S2_u8 == YU_D_MOD_SHUT)  // 强行终止，归0
             {
                 YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM = (float)YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE;
-
             }
 
             YU_V_ATTACK_PARAM.TIME = 0;  // 卡弹后时间归0，等待下次是否卡弹
+            YU_V_ATTACK_PARAM.COUNT = 0;
         }else
         {
             // 根据遥控模式获取当前拨弹电机目标值  // 思考下，连续拨弹中速度不稳定问题 // 这个直接条pid 速度环给稳了估计就行
@@ -163,7 +174,8 @@ bool YU_F_ATTACK_JAM_CHECK(YU_TYPEDEF_MOTOR *MOTOR)
 
         YU_F_CAN_SEND(YU_D_CAN_2,0x200,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_L].DATA.CAN_SEND,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_R].DATA.CAN_SEND,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.CAN_SEND,0);
 //        printf("%hd\n",YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.CAN_SEND);
-//        printf("ANGLE:  %d  MOD:  %d   TIME:  %d  AIM  %.2f\n",YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE,YU_V_DBUS.REMOTE.S2_u8,YU_V_ATTACK_PARAM.TIME,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM);
+//        printf("%hd\n",YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.SPEED_NOW);
+//        printf("ANGLE:  %d  MOD:  %d   TIME:  %d  FLAG: %d AIM  %.2f\n",YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.ANGLE_INFINITE,YU_V_DBUS.REMOTE.S2_u8,YU_V_ATTACK_PARAM.TIME,YU_V_ATTACK_PARAM.FLAG,YU_V_MOTOR_ATTACK[YU_D_MOTOR_ATTACK_G].DATA.AIM);
     }
 
 
