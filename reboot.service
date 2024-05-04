@@ -6,9 +6,6 @@ After=network-online.target usb.target
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/bin/bash /home/nx/horizon/YU/start.sh
-PermissionsStartOnly=true
-ExecStartPre=/usr/sbin/modprobe mttcan
-ExecStartPre=/usr/sbin/slcand -o -c -s8 /dev/ttyACM0 can2
 ExecStop=
 
 [Install]
