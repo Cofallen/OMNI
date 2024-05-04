@@ -22,8 +22,16 @@ using namespace std;
 
 int main()
 {
+#ifdef BUILD_RELEASE
     // 注册程序退出信号
     signal(SIGINT,YU_F_THREAD_EXIT);
+    printf("release模式\n");
+    sleep(2);
+#endif
+#ifdef BUILD_DEBUG
+    printf("debug模式\n");
+    sleep(2);
+#endif
 
     YU_F_CAN_INIT();
 
