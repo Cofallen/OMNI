@@ -56,7 +56,7 @@ float YU_F_ATTACK_JAM_AIM(YU_TYPEDEF_MOTOR *MOTOR, YU_TYPEDEF_DBUS *DBUS)
         LOCK = 0;
         YU_V_ATTACK_PARAM.COUNT = 0;    // 防止多次调用，使目标值快速增长
     }
-    if (YU_V_ATTACK_PARAM.FLAG == 1)
+    if (YU_V_ATTACK_PARAM.FLAG == 1)    // 卡弹后只转一个弹丸
         return MOTOR[YU_D_MOTOR_ATTACK_G].DATA.AIM;
     if (LOCK == 0)
     {
